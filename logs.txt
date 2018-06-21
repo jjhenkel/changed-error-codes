@@ -1,0 +1,4007 @@
+commit 89e255678fec5a1a9ed59664a62212d19873aedc
+Merge: 8efcf34 692ad28
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Jun 12 09:49:33 2018 -0700
+
+    Merge tag 'nfsd-4.18' of git://linux-nfs.org/~bfields/linux
+    
+    Pull nfsd updates from Bruce Fields:
+     "A relatively quiet cycle for nfsd.
+    
+      The largest piece is an RDMA update from Chuck Lever with new trace
+      points, miscellaneous cleanups, and streamlining of the send and
+      receive paths.
+    
+      Other than that, some miscellaneous bugfixes"
+    
+    * tag 'nfsd-4.18' of git://linux-nfs.org/~bfields/linux: (26 commits)
+      nfsd: fix error handling in nfs4_set_delegation()
+      nfsd: fix potential use-after-free in nfsd4_decode_getdeviceinfo
+      Fix 16-byte memory leak in gssp_accept_sec_context_upcall
+      svcrdma: Fix incorrect return value/type in svc_rdma_post_recvs
+      svcrdma: Remove unused svc_rdma_op_ctxt
+      svcrdma: Persistently allocate and DMA-map Send buffers
+      svcrdma: Simplify svc_rdma_send()
+      svcrdma: Remove post_send_wr
+      svcrdma: Don't overrun the SGE array in svc_rdma_send_ctxt
+      svcrdma: Introduce svc_rdma_send_ctxt
+      svcrdma: Clean up Send SGE accounting
+      svcrdma: Refactor svc_rdma_dma_map_buf
+      svcrdma: Allocate recv_ctxt's on CPU handling Receives
+      svcrdma: Persistently allocate and DMA-map Receive buffers
+      svcrdma: Preserve Receive buffer until svc_rdma_sendto
+      svcrdma: Simplify svc_rdma_recv_ctxt_put
+      svcrdma: Remove sc_rq_depth
+      svcrdma: Introduce svc_rdma_recv_ctxt
+      svcrdma: Trace key RDMA API events
+      svcrdma: Trace key RPC/RDMA protocol events
+      ...
+
+commit af7fd74ec2434ec999160af32d10be17fbf225ed
+Author: Chuck Lever <chuck.lever@oracle.com>
+Date:   Mon May 14 13:20:06 2018 -0400
+
+    svcrdma: Fix incorrect return value/type in svc_rdma_post_recvs
+    
+    This crept in during the development process and wasn't caught
+    before I posted the "final" version.
+    
+    Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+    Fixes: 0b2613c5883f ('svcrdma: Allocate recv_ctxt's on CPU ... ')
+    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+
+commit c22aecd75919511abea872b201751e0be1add898
+Author: Chao Yu <yuchao0@huawei.com>
+Date:   Sat Apr 21 17:53:52 2018 +0800
+
+    f2fs: fix to detect failure of dquot_initialize
+    
+    dquot_initialize() can fail due to any exception inside quota subsystem,
+    f2fs needs to be aware of it, and return correct return value to caller.
+    
+    Signed-off-by: Chao Yu <yuchao0@huawei.com>
+    Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+commit 3d165dc3aeef0c9cca7dd760a09f7d08aab0eef2
+Author: Chao Yu <yuchao0@huawei.com>
+Date:   Sun Apr 8 20:39:03 2018 +0800
+
+    f2fs: correct return value of f2fs_trim_fs
+    
+    Correct return value in two cases:
+    - return EINVAL if end boundary is out-of-range.
+    - return EIO if fs needs off-line check.
+    
+    Signed-off-by: Chao Yu <yuchao0@huawei.com>
+    Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+commit f287fe35ded1f07c42fc8d21476fa9a7d64e89b7
+Merge: b9f5701 3de06d5
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri May 25 09:29:17 2018 -0700
+
+    Merge tag 'mmc-v4.17-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+    
+    Pull MMC fixes from Ulf Hansson:
+     "MMC core:
+       - Propagate correct error code for RPMB requests
+    
+      MMC host:
+       - sdhci-iproc: Drop hard coded cap for 1.8v
+       - sdhci-iproc: Fix 32bit writes for transfer mode
+       - sdhci-iproc: Enable SDHCI_QUIRK2_HOST_OFF_CARD_ON for cygnus"
+    
+    * tag 'mmc-v4.17-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc:
+      mmc: sdhci-iproc: add SDHCI_QUIRK2_HOST_OFF_CARD_ON for cygnus
+      mmc: sdhci-iproc: fix 32bit writes for TRANSFER_MODE register
+      mmc: sdhci-iproc: remove hard coded mmc cap 1.8v
+      mmc: block: propagate correct returned value in mmc_rpmb_ioctl
+
+commit a1a9f537aa44862a14c00c52f934b79fb725292d
+Merge: b506943 009f8c9
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri May 25 09:13:34 2018 -0700
+
+    Merge tag 'sound-4.17-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+    
+    Pull sound fixes from Takashi Iwai:
+     "Two fixes:
+    
+       - a timer pause event notification was garbled upon the recent
+         hardening work; corrected now
+    
+       - HD-audio runtime PM regression fix due to the incorrect return
+         type"
+    
+    * tag 'sound-4.17-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound:
+      ALSA: hda - Fix runtime PM
+      ALSA: timer: Fix pause event notification
+
+commit b25b750df99bcba29317d3f9d9f93c4ec58890e6
+Author: Mathieu Malaterre <malat@debian.org>
+Date:   Wed May 16 21:20:20 2018 +0200
+
+    mmc: block: propagate correct returned value in mmc_rpmb_ioctl
+    
+    In commit 97548575bef3 ("mmc: block: Convert RPMB to a character device") a
+    new function `mmc_rpmb_ioctl` was added. The final return is simply
+    returning a value of `0` instead of propagating the correct return code.
+    
+    Discovered during a compilation with W=1, silence the following gcc warning
+    
+    drivers/mmc/core/block.c:2470:6: warning: variable ‘ret’ set but not used
+    [-Wunused-but-set-variable]
+    
+    Signed-off-by: Mathieu Malaterre <malat@debian.org>
+    Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
+    Fixes: 97548575bef3 ("mmc: block: Convert RPMB to a character device")
+    Cc: stable@vger.kernel.org # v4.15+
+    Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+commit f4d641a2288504d7761e715a922fc675ddc2e594
+Merge: f010089 c89ebb9
+Author: David S. Miller <davem@davemloft.net>
+Date:   Fri May 11 15:57:23 2018 -0400
+
+    Merge branch '10GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/net-queue
+    
+    Jeff Kirsher says:
+    
+    ====================
+    Intel Wired LAN Driver Updates 2018-05-11
+    
+    This series contains fixes to the ice, ixgbe and ixgbevf drivers.
+    
+    Jeff Shaw provides a fix to ensure rq_last_status gets set, whether or
+    not the hardware responds with an error in the ice driver.
+    
+    Emil adds a check for unsupported module during the reset routine for
+    ixgbe.
+    
+    Luc Van Oostenryck fixes ixgbevf_xmit_frame() where it was not using the
+    correct return value (int).
+    
+    Colin Ian King fixes a potential resource leak in ixgbe, where we were
+    not freeing ipsec in our cleanup path.
+    ====================
+    
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit b349e0b5ec5d7be57ac243fb08ae8b994c928165
+Merge: 6e2135c 37923ed
+Author: David S. Miller <davem@davemloft.net>
+Date:   Thu Mar 29 14:10:31 2018 -0400
+
+    Merge branch 'net-Allow-FIB-notifiers-to-fail-add-and-replace'
+    
+    David Ahern says:
+    
+    ====================
+    net: Allow FIB notifiers to fail add and replace
+    
+    I wanted to revisit how resource overload is handled for hardware offload
+    of FIB entries and rules. At the moment, the in-kernel fib notifier can
+    tell a driver about a route or rule add, replace, and delete, but the
+    notifier can not affect the action. Specifically, in the case of mlxsw
+    if a route or rule add is going to overflow the ASIC resources the only
+    recourse is to abort hardware offload. Aborting offload is akin to taking
+    down the switch as the path from data plane to the control plane simply
+    can not support the traffic bandwidth of the front panel ports. Further,
+    the current state of FIB notifiers is inconsistent with other resources
+    where a driver can affect a user request - e.g., enslavement of a port
+    into a bridge or a VRF.
+    
+    As a result of the work done over the past 3+ years, I believe we are
+    at a point where we can bring consistency to the stack and offloads,
+    and reliably allow the FIB notifiers to fail a request, pushing an error
+    along with a suitable error message back to the user. Rather than
+    aborting offload when the switch is out of resources, userspace is simply
+    prevented from adding more routes and has a clear indication of why.
+    
+    This set does not resolve the corner case where rules or routes not
+    supported by the device are installed prior to the driver getting loaded
+    and registering for FIB notifications. In that case, hardware offload has
+    not been established and it can refuse to offload anything, sending
+    errors back to userspace via extack. Since conceptually the driver owns
+    the netdevices associated with its asic, this corner case mainly applies
+    to unsupported rules and any races during the bringup phase.
+    
+    Patch 1 fixes call_fib_notifiers to extract the errno from the encoded
+    response from handlers.
+    
+    Patches 2-5 allow the call to call_fib_notifiers to fail the add or
+    replace of a route or rule.
+    
+    Patch 6 adds a simple resource controller to netdevsim to illustrate
+    how a FIB resource controller can limit the number of route entries.
+    
+    Changes since RFC
+    - correct return code for call_fib_notifier
+    - dropped patch 6 exporting devlink symbols
+    - limited example resource controller to init_net only
+    - updated Kconfig for netdevsim to use MAY_USE_DEVLINK
+    - updated cover letter regarding startup case noted by Ido
+    ====================
+    
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit c314c7ba40389876a3a4534cdef4adde56174a09
+Merge: e3c72f3 12d80bc
+Author: David S. Miller <davem@davemloft.net>
+Date:   Mon Mar 19 15:12:03 2018 -0400
+
+    Merge branch '40GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue
+    
+    Jeff Kirsher says:
+    
+    ====================
+    40GbE Intel Wired LAN Driver Updates 2018-03-19
+    
+    This series contains updates to i40e and i40evf only.
+    
+    Alex fixes a potential deadlock in the configure_clsflower function in
+    i40evf, where we exit with the "IN_CRITICAL_TASK" bit set while
+    notifying the PF of flower filters.
+    
+    Jan fixed an issue where it was possible to set a mode that is not
+    allowed which resulted in link being down, so fixed the parity between
+    i40e_set_link_ksettings() and i40e_get_link_ksettings().
+    
+    Patryk fixes a bug where a backplane device was allowing the setting of
+    link settings, which is not allowed.
+    
+    Shiraz fixes a crash when entering S3 because the client interface was
+    freeing the MSIx vectors while they are still in use.
+    
+    Jake fixes up a function header comment to document a newly added
+    parameter.  Also cleaned up flags that were never used.
+    
+    Doug fixes the incorrect return type for i40e_aq_add_cloud_filters().
+    ====================
+    
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 85925cd0b84eb16cf2dfd730758c3266a243569c
+Author: Doug Dziggel <douglas.a.dziggel@intel.com>
+Date:   Mon Mar 19 09:28:04 2018 -0700
+
+    i40e: Fix incorrect return types
+    
+    Fix return types from i40e_status to enum i40e_status_code.
+    
+    Signed-off-by: Doug Dziggel <douglas.a.dziggel@intel.com>
+    Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+    Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+commit 78393fdde2a456cafa414b171c90f26a3df98b20
+Author: Andy Lutomirski <luto@kernel.org>
+Date:   Tue Mar 13 22:03:11 2018 -0700
+
+    selftests/x86/entry_from_vm86: Add test cases for POPF
+    
+    POPF is currently broken -- add tests to catch the error.  This
+    results in:
+    
+       [RUN]	POPF with VIP set and IF clear from vm86 mode
+       [INFO]	Exited vm86 mode due to STI
+       [FAIL]	Incorrect return reason (started at eip = 0xd, ended at eip = 0xf)
+    
+    because POPF currently fails to check IF before reporting a pending
+    interrupt.
+    
+    This patch also makes the FAIL message a bit more informative.
+    
+    Reported-by: Bart Oldeman <bartoldeman@gmail.com>
+    Signed-off-by: Andy Lutomirski <luto@kernel.org>
+    Cc: Borislav Petkov <bp@alien8.de>
+    Cc: Brian Gerst <brgerst@gmail.com>
+    Cc: Denys Vlasenko <dvlasenk@redhat.com>
+    Cc: H. Peter Anvin <hpa@zytor.com>
+    Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+    Cc: Linus Torvalds <torvalds@linux-foundation.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Stas Sergeev <stsp@list.ru>
+    Cc: Thomas Gleixner <tglx@linutronix.de>
+    Cc: stable@vger.kernel.org
+    Link: http://lkml.kernel.org/r/a16270b5cfe7832d6d00c479d0f871066cbdb52b.1521003603.git.luto@kernel.org
+    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+commit 16a6620c32b0cffe7171181fa7cb57125235c107
+Author: Rex Zhu <Rex.Zhu@amd.com>
+Date:   Fri Mar 2 18:41:41 2018 +0800
+
+    drm/amd/pp: Fix incorrect return value in smu7_check_clk_voltage_valid
+    
+    Reviewed-by: Evan Quan <evan.quan@amd.com>
+    Signed-off-by: Rex Zhu <Rex.Zhu@amd.com>
+    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+
+commit c23a75759191e84f4ba15b85ea4f97bd544b5362
+Merge: e912bf2 4596749
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Feb 25 16:58:55 2018 -0800
+
+    Merge branch 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+    
+    Pull x86 fixes from Thomas Gleixner:
+     "A small set of fixes:
+    
+       - UAPI data type correction for hyperv
+    
+       - correct the cpu cores field in /proc/cpuinfo on CPU hotplug
+    
+       - return proper error code in the resctrl file system failure path to
+         avoid silent subsequent failures
+    
+       - correct a subtle accounting issue in the new vector allocation code
+         which went unnoticed for a while and caused suspend/resume
+         failures"
+    
+    * 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+      x86/topology: Update the 'cpu cores' field in /proc/cpuinfo correctly across CPU hotplug operations
+      x86/topology: Fix function name in documentation
+      x86/intel_rdt: Fix incorrect returned value when creating rdgroup sub-directory in resctrl file system
+      x86/apic/vector: Handle vector release on CPU unplug correctly
+      genirq/matrix: Handle CPU offlining proper
+      x86/headers/UAPI: Use __u64 instead of u64 in <uapi/asm/hyperv.h>
+
+commit 36e74d355297dde6e69a39c838d24710e442babe
+Author: Wang Hui <john.wanghui@huawei.com>
+Date:   Thu Feb 22 19:26:03 2018 -0800
+
+    x86/intel_rdt: Fix incorrect returned value when creating rdgroup sub-directory in resctrl file system
+    
+    If no monitoring feature is detected because all monitoring features are
+    disabled during boot time or there is no monitoring feature in hardware,
+    creating rdtgroup sub-directory by "mkdir" command reports error:
+    
+      mkdir: cannot create directory ‘/sys/fs/resctrl/p1’: No such file or directory
+    
+    But the sub-directory actually is generated and content is correct:
+    
+      cpus  cpus_list  schemata  tasks
+    
+    The error is because rdtgroup_mkdir_ctrl_mon() returns non zero value after
+    the sub-directory is created and the returned value is reported as an error
+    to user.
+    
+    Clear the returned value to report to user that the sub-directory is
+    actually created successfully.
+    
+    Signed-off-by: Wang Hui <john.wanghui@huawei.com>
+    Signed-off-by: Zhang Yanfei <yanfei.zhang@huawei.com>
+    Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+    Cc: Linus Torvalds <torvalds@linux-foundation.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Ravi V Shankar <ravi.v.shankar@intel.com>
+    Cc: Thomas Gleixner <tglx@linutronix.de>
+    Cc: Tony Luck <tony.luck@intel.com>
+    Cc: Vikas <vikas.shivappa@intel.com>
+    Cc: Xiaochen Shen <xiaochen.shen@intel.com>
+    Link: http://lkml.kernel.org/r/1519356363-133085-1-git-send-email-fenghua.yu@intel.com
+    Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+commit 6787dc24b72b88404ae652c914014e51ddf1c4fa
+Merge: a4b7fd7 36c7ce4
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon Jan 29 14:02:20 2018 -0800
+
+    Merge tag '4.16-rc-SMB3' of git://git.samba.org/sfrench/cifs-2.6
+    
+    Pull cifs updates from Steve French:
+     "Some fixes for stable, fixed SMB3 DFS support, SMB3 Direct (RDMA) and
+      various bug fixes and cleanup"
+    
+    * tag '4.16-rc-SMB3' of git://git.samba.org/sfrench/cifs-2.6: (60 commits)
+      fs/cifs/cifsacl.c Fixes typo in a comment
+      update internal version number for cifs.ko
+      cifs: add .splice_write
+      CIFS: document tcon/ses/server refcount dance
+      move a few externs to smbdirect.h to eliminate warning
+      CIFS: zero sensitive data when freeing
+      Cleanup some minor endian issues in smb3 rdma
+      CIFS: dump IPC tcon in debug proc file
+      CIFS: use tcon_ipc instead of use_ipc parameter of SMB2_ioctl
+      CIFS: make IPC a regular tcon
+      cifs: remove redundant duplicated assignment of pointer 'node'
+      CIFS: SMBD: work around gcc -Wmaybe-uninitialized warning
+      cifs: Fix autonegotiate security settings mismatch
+      CIFS: SMBD: _smbd_get_connection() can be static
+      CIFS: SMBD: Disable signing on SMB direct transport
+      CIFS: SMBD: Add SMB Direct debug counters
+      CIFS: SMBD: Upper layer performs SMB read via RDMA write through memory registration
+      CIFS: SMBD: Read correct returned data length for RDMA write (SMB read) I/O
+      CIFS: SMBD: Upper layer performs SMB write via RDMA read through memory registration
+      CIFS: SMBD: Implement RDMA memory registration
+      ...
+
+commit 74dcf418fe344657b0e48a5a4b75f935443fa53f
+Author: Long Li <longli@microsoft.com>
+Date:   Wed Nov 22 17:38:46 2017 -0700
+
+    CIFS: SMBD: Read correct returned data length for RDMA write (SMB read) I/O
+    
+    This patch is for preparing upper layer doing SMB read via RDMA write.
+    
+    When RDMA write is used for SMB read, the returned data length is in
+    DataRemaining in the response packet. Reading it properly by adding a
+    parameter to specifiy where the returned data length is.
+    
+    Add the defition for memory registration to wdata and return the correct
+    length based on if RDMA write is used.
+    
+    Signed-off-by: Long Li <longli@microsoft.com>
+    Signed-off-by: Steve French <smfrench@gmail.com>
+    Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+    Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+
+commit c22c0ae5232e2280a12cdf389fdc557b83c5b968
+Author: Shreyas NC <shreyas.nc@intel.com>
+Date:   Tue Jan 9 10:15:46 2018 +0530
+
+    soundwire: Fix incorrect return value check
+    
+    pm_runtime_get_sync will return negative values for error
+    and 0 or 1 for success. Update the error check accordingly.
+    
+    Signed-off-by: Shreyas NC <shreyas.nc@intel.com>
+    Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+    Fixes: 9d715fa005eb: ("soundwire: Add IO transfer")
+    Signed-off-by: Vinod Koul <vinod.koul@intel.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit 9961dbcd228e868224f5f725dfae69de739855dc
+Author: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Date:   Tue Jan 9 12:35:54 2018 +0100
+
+    Documentation: gpio: correct return value of gpiod_get_direction
+    
+    The use of the GPIOF_* flags is deprecated, so don't advertise them
+    here. Document the plain numbers for now until we have a better
+    solution.
+    
+    Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+commit 1b8c5cd890e274781a8ef61585ae03614be9ccd8
+Merge: 14b661e 87c9fd8
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Nov 22 20:58:23 2017 -1000
+
+    Merge tag 'rtc-4.15' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
+    
+    Pull RTC updates from Alexandre Belloni:
+     "There is nothing scary this cycle, mostly driver fixes and updates.
+    
+      The core fix has been in for a while and has been tested on multiple
+      kernel revisions by multiple teams.
+    
+      Core:
+       - Fix setting the alarm to the next expiring timer
+    
+      New drivers:
+       - Mediatek MT7622 RTC
+       - NXP PCF85363
+       - Spreadtrum SC27xx PMIC RTC
+    
+      Drivers updates:
+       - Use generic nvmem to expose the Non volatile ram for ds1305,
+         ds1511, m48t86 and omap
+       - abx80x: solve possible race condition at probe
+       - armada38x: support trimming the RTC oscillator
+       - at91rm9200: fix reading the alarm value at boot
+       - ds1511: allow waking platform
+       - m41t80: rework square wave output
+       - pcf8523: support trimming the RTC oscillator
+       - pcf8563: fix clock output rate
+       - pl031: make interrupt optional
+       - xgene: fix suspend/resume"
+    
+    * tag 'rtc-4.15' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux: (50 commits)
+      dt-bindings: rtc: imxdi: Improve the bindings text
+      rtc: sc27xx: Add Spreadtrum SC27xx PMIC RTC driver
+      dt-bindings: rtc: Add Spreadtrum SC27xx RTC documentation
+      rtc: at91rm9200: fix reading alarm value
+      rtc: at91rm9200: stop calculating yday in at91_rtc_readalarm
+      rtc: sysfs: Use time64_t variables to set time/alarm
+      rtc: xgene: mark PM functions as __maybe_unused
+      rtc: xgene: Fix suspend/resume
+      rtc: pcf8563: don't alway enable the alarm
+      rtc: pcf8563: fix output clock rate
+      rtc: rx8010: Fix for incorrect return value
+      rtc: rx8010: Specify correct address for RX8010_RESV31
+      rtc: rx8010: Remove duplicate define
+      rtc: m41t80: remove unneeded checks from m41t80_sqw_set_rate
+      rtc: m41t80: avoid i2c read in m41t80_sqw_is_prepared
+      rtc: m41t80: avoid i2c read in m41t80_sqw_recalc_rate
+      rtc: m41t80: fix m41t80_sqw_round_rate return value
+      rtc: m41t80: m41t80_sqw_set_rate should return 0 on success
+      rtc: add support for NXP PCF85363 real-time clock
+      rtc: omap: Support scratch registers
+      ...
+
+commit 19b9aaf8a5fa634b2f16c3a2cfa819b74991273e
+Merge: 6c4ba00 838c8af
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Nov 15 13:37:15 2017 -0800
+
+    Merge tag 'for-v4.15' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
+    
+    Pull power supply and reset updates from Sebastian Reichel:
+    
+     - misc minor fixes
+    
+    * tag 'for-v4.15' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply:
+      power: supply: cpcap-charger: fix incorrect return value check
+      power: supply: replace pr_* with dev_*
+      power: supply: pcf50633-charger: remove redundant variable charging_start
+      power: supply: generic-adc-battery: remove redundant variable pdata
+      power: supply: max8997: Improve a size determination in probe
+
+commit 838c8afa67f98014970c9f56107805e767ed87ad
+Author: Pan Bian <bianpan2016@163.com>
+Date:   Sun Nov 12 23:52:02 2017 +0800
+
+    power: supply: cpcap-charger: fix incorrect return value check
+    
+    Function platform_get_irq_byname() returns a negative error code on
+    failure, and a zero or positive number on success. However, in function
+    cpcap_usb_init_irq(), positive IRQ numbers are also taken as error
+    cases. Use "if (irq < 0)" instead of "if (!irq)" to validate the return
+    value of platform_get_irq_byname().
+    
+    Signed-off-by: Pan Bian <bianpan2016@163.com>
+    Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+
+commit 804a6cfeb5c9e1caae86b345a5a8a50f77ddccc4
+Author: Akshay Bhat <akshay.bhat@timesys.com>
+Date:   Wed Nov 8 14:58:14 2017 -0500
+
+    rtc: rx8010: Fix for incorrect return value
+    
+    The err variable is not being reset after a successful read. Explicitly
+    return 0 at the end of function call to account for all return paths.
+    
+    Reported-by: Jens-Peter Oswald <oswald@lre.de>
+    Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
+    Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+
+commit 4f2ba5dc183b71362c3655b50c72f1b10ccac1c1
+Merge: cb0631f 2b7cda9
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Nov 1 08:29:01 2017 -0700
+
+    Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+    
+    Pull networking fixes from David Miller:
+    
+     1) Fix refcounting in xfrm_bundle_lookup() when using a dummy bundle,
+        from Steffen Klassert.
+    
+     2) Fix crypto header handling in rx data frames in ath10k driver, from
+        Vasanthakumar Thiagarajan.
+    
+     3) Fix use after free of qdisc when we defer tcp_chain_flush() to a
+        workqueue. From Cong Wang.
+    
+     4) Fix double free in lapbether driver, from Pan Bian.
+    
+     5) Sanitize TUNSETSNDBUF values, from Craig Gallek.
+    
+     6) Fix refcounting when addrconf_permanent_addr() calls
+        ipv6_del_addr(). From Eric Dumazet.
+    
+     7) Fix MTU probing bug in TCP that goes back to 2007, from Eric
+        Dumazet.
+    
+    * git://git.kernel.org/pub/scm/linux/kernel/git/davem/net:
+      tcp: fix tcp_mtu_probe() vs highest_sack
+      ipv6: addrconf: increment ifp refcount before ipv6_del_addr()
+      tun/tap: sanitize TUNSETSNDBUF input
+      mlxsw: i2c: Fix buffer increment counter for write transaction
+      mlxsw: reg: Add high and low temperature thresholds
+      MAINTAINERS: Remove Yotam from mlxfw
+      MAINTAINERS: Update Yotam's E-mail
+      net: hns: set correct return value
+      net: lapbether: fix double free
+      bpf: remove SK_REDIRECT from UAPI
+      net: phy: marvell: Only configure RGMII delays when using RGMII
+      xfrm: Fix GSO for IPsec with GRE tunnel.
+      tc-testing: fix arg to ip command: -s -> -n
+      net_sched: remove tcf_block_put_deferred()
+      l2tp: hold tunnel in pppol2tp_connect()
+      Revert "ath10k: fix napi_poll budget overflow"
+      ath10k: rebuild crypto header in rx data frames
+      wcn36xx: Remove unnecessary rcu_read_unlock in wcn36xx_bss_info_changed
+      xfrm: Clear sk_dst_cache when applying per-socket policy.
+      xfrm: Fix xfrm_dst_cache memleak
+
+commit d2083d0e92117598dd24ba270af12376f1fb8866
+Author: Pan Bian <bianpan2016@163.com>
+Date:   Mon Oct 30 16:50:01 2017 +0800
+
+    net: hns: set correct return value
+    
+    The function of_parse_phandle() returns a NULL pointer if it cannot
+    resolve a phandle property to a device_node pointer. In function
+    hns_nic_dev_probe(), its return value is passed to PTR_ERR to extract
+    the error code. However, in this case, the extracted error code will
+    always be zero, which is unexpected.
+    
+    Signed-off-by: Pan Bian <bianpan2016@163.com>
+    Reviewed-by: Tobias Klauser <tklauser@distanz.ch>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 3afb0c501414aa3c4a7cfea9ae1a0acfbf7be14f
+Author: Allen Pais <allen.lkml@gmail.com>
+Date:   Wed Sep 20 11:47:46 2017 +0530
+
+    btrfs: return -ENOMEM on allocation failure in btrfsic
+    
+    Forward the correct return value -ENOMEM from btrfsic_dev_state_alloc()
+    too.
+    
+    Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+    Reviewed-by: Anand Jain <anand.jain@oracle.com>
+    Reviewed-by: David Sterba <dsterba@suse.com>
+    [ adjust changelog ]
+    Signed-off-by: David Sterba <dsterba@suse.com>
+
+commit d596e5d08da0a25be789432ed821e63db9ef72ac
+Author: Yongqiang Sun <yongqiang.sun@amd.com>
+Date:   Thu Sep 21 10:46:33 2017 -0400
+
+    drm/amd/display: Fixed incorrect return value for validaton
+    
+    Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
+    Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+    Acked-by: Harry Wentland <Harry.Wentland@amd.com>
+    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+
+commit f44dea3421b47d355a835e9cfcc59ca7318575a9
+Merge: b88d12e 18eb863
+Author: David S. Miller <davem@davemloft.net>
+Date:   Tue Oct 10 13:20:16 2017 -0700
+
+    Merge branch '1GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue
+    
+    Jeff Kirsher says:
+    
+    ====================
+    1GbE Intel Wired LAN Driver Updates 2017-10-10
+    
+    This series contains updates to e1000e and igb.
+    
+    Benjamin Poirier provides several fixes for e1000e, starting with a
+    correction to the return status which was always returning success even
+    if it was not successful.  Fixed code comments to reflect the actual
+    code behavior.  Fixed the conditional test for the correct return
+    value.  Fixed a potential race condition reported by Lennart Sorensen,
+    where the single flag get_link_status is used to signal two different
+    states.
+    
+    Sasha fixes a buffer overrun for i219 devices, where the chipset had
+    reduced the round-trip latency for the LAN controller DMA accesses
+    which in some high performance cases caused a buffer overrun while
+    processing the DMA transactions.
+    
+    Willem de Bruijn changes the default behavior of e1000e to use the
+    burst mode settings by default unless the user specifies the
+    receive interrupt delay (RxIntDelay).
+    
+    Florian Fainelli updates the driver to differentiate between when
+    e1000e_put_txbuf() is called from normal reclamation or when a
+    DMA mapping failure to make the driver more "drop monitor friendly".
+    
+    Christophe JAILLET fixes a potential NULL pointer dereference by
+    properly returning -ENOMEM on memory allocation failures.
+    ====================
+    
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 71641d99ce037ea226f94d5e08f2a8f71eba08f4
+Author: Chuck Lever <chuck.lever@oracle.com>
+Date:   Fri Jun 23 17:18:41 2017 -0400
+
+    svcrdma: Properly compute .len and .buflen for received RPC Calls
+    
+    When an RPC-over-RDMA request is received, the Receive buffer
+    contains a Transport Header possibly followed by an RPC message.
+    
+    Even though rq_arg.head[0] (as passed to NFSD) does not contain the
+    Transport Header header, currently rq_arg.len includes the size of
+    the Transport Header.
+    
+    That violates the intent of the xdr_buf API contract. .buflen should
+    include everything, but .len should be exactly the length of the RPC
+    message in the buffer.
+    
+    The rq_arg fields are summed together at the end of
+    svc_rdma_recvfrom to obtain the correct return value. rq_arg.len
+    really ought to contain the correct number of bytes already, but it
+    currently doesn't due to the above misbehavior.
+    
+    Let's instead ensure that .buflen includes the length of the
+    transport header, and that .len is always equal to head.iov_len +
+    .page_len + tail.iov_len .
+    
+    Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+
+commit ee514c7a2379385fcec363f2f5f8db4eb56bc48c
+Author: Gustavo A. R. Silva <garsilva@embeddedor.com>
+Date:   Thu Jun 22 17:05:35 2017 -0500
+
+    EDAC, pnd2: Return proper error value from apl_rd_reg()
+    
+    Add code comment to make it clear that the fall-through is intentional
+    and, OR ret with its previous value to avoid overwriting it so that
+    callers can check the correct return value.
+    
+    Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
+    Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+    Cc: Tony Luck <tony.luck@intel.com>
+    Cc: linux-edac <linux-edac@vger.kernel.org>
+    Link: http://lkml.kernel.org/r/20170622220535.GA4896@embeddedgus
+    [ Massage a bit. ]
+    Signed-off-by: Borislav Petkov <bp@suse.de>
+
+commit 07f615574f8ac499875b21c1142f26308234a92c
+Author: Serhey Popovych <serhe.popovych@gmail.com>
+Date:   Tue Jun 20 13:29:25 2017 +0300
+
+    ipv6: Do not leak throw route references
+    
+    While commit 73ba57bfae4a ("ipv6: fix backtracking for throw routes")
+    does good job on error propagation to the fib_rules_lookup()
+    in fib rules core framework that also corrects throw routes
+    handling, it does not solve route reference leakage problem
+    happened when we return -EAGAIN to the fib_rules_lookup()
+    and leave routing table entry referenced in arg->result.
+    
+    If rule with matched throw route isn't last matched in the
+    list we overwrite arg->result losing reference on throw
+    route stored previously forever.
+    
+    We also partially revert commit ab997ad40839 ("ipv6: fix the
+    incorrect return value of throw route") since we never return
+    routing table entry with dst.error == -EAGAIN when
+    CONFIG_IPV6_MULTIPLE_TABLES is on. Also there is no point
+    to check for RTF_REJECT flag since it is always set throw
+    route.
+    
+    Fixes: 73ba57bfae4a ("ipv6: fix backtracking for throw routes")
+    Signed-off-by: Serhey Popovych <serhe.popovych@gmail.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 91c0719c695a1fcba6a9728eb013eb6e3c7f3487
+Merge: 1b22f6d7 0f93332
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Fri Jun 16 10:01:04 2017 +1000
+
+    Merge tag 'drm-misc-fixes-2017-06-15' of git://anongit.freedesktop.org/git/drm-misc into drm-fixes
+    
+    Driver Changes:
+    - dw-hdmi: Fix compilation error if REGMAP_MMIO not selected (Laurent)
+    - host1x: Fix incorrect return value (Christophe)
+    - tegra: Shore up idr API usage in tegra staging code (Dmitry)
+    - mgag200: Always use HiPri mode for G200e4v2 and limit max bandwidth (Mathieu)
+    - mxsfb: Ensure display can be lit up without bootloader initialization (Fabio)
+    
+    Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+    Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    Cc: Dmitry Osipenko <digetx@gmail.com>
+    Cc: Mathieu Larouche <mathieu.larouche@matrox.com>
+    Cc: Fabio Estevam <fabio.estevam@nxp.com>
+    
+    * tag 'drm-misc-fixes-2017-06-15' of git://anongit.freedesktop.org/git/drm-misc:
+      drm: mxsfb_crtc: Reset the eLCDIF controller
+      drm/mgag200: Fix to always set HiPri for G200e4 V2
+      drm/tegra: Correct idr_alloc() minimum id
+      drm/tegra: Fix lockup on a use of staging API
+      gpu: host1x: Fix error handling
+      drm: dw-hdmi: Fix compilation breakage by selecting REGMAP_MMIO
+
+commit cd8c42968ee651b69e00f8661caff32b0086e82d
+Author: Sachin Prabhu <sprabhu@redhat.com>
+Date:   Wed Apr 26 14:05:46 2017 +0100
+
+    Fix match_prepath()
+    
+    Incorrect return value for shares not using the prefix path means that
+    we will never match superblocks for these shares.
+    
+    Fixes: commit c1d8b24d1819 ("Compare prepaths when comparing superblocks")
+    Cc: stable@vger.kernel.org
+    Signed-off-by: Sachin Prabhu <sprabhu@redhat.com>
+    Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+    Signed-off-by: Steve French <smfrench@gmail.com>
+
+commit 8d77bb8276062ff2d991bec71389520dd0156cc3
+Author: Rakesh Pandit <rakesh@tuxera.com>
+Date:   Thu Apr 20 21:23:56 2017 +0300
+
+    lightnvm: propagate pblk_init return to userspace
+    
+    From userspace calling ioctl(NVM_DEV_CREATE) was returning ENOMEM for
+    invalid arguments even though pblk (pblk_init) was returning correctly
+    -EINVAL to nvm_create_tgt inside core.  This patch propagates the
+    correct return value to userspace.
+    
+    Because pblk was introduced recently this only needs to go in 4.12.
+    
+    Fixes: a4bd217b4326 ("lightnvm: physical block device (pblk) target")
+    Signed-off-by: Rakesh Pandit <rakesh@tuxera.com>
+    Signed-off-by: Jens Axboe <axboe@fb.com>
+
+commit e38db6beeed0eac14e21bf3963fdba80043211e3
+Author: Julian Wiedmann <jwi@linux.vnet.ibm.com>
+Date:   Tue Apr 11 16:11:14 2017 +0200
+
+    s390/qeth: use correct return type for hard_start_xmit()
+    
+    ndo_start_xmit() expects us to return netdev_tx_t here...
+    
+    Signed-off-by: Julian Wiedmann <jwi@linux.vnet.ibm.com>
+    Acked-by: Ursula Braun <ubraun@linux.vnet.ibm.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 69a4aa89315819e9eabd3a43211506d7302121a6
+Author: Jakub Kicinski <jakub.kicinski@netronome.com>
+Date:   Tue Mar 21 17:59:13 2017 -0700
+
+    nfp: correct return codes when msleep gets interrupted
+    
+    msleep_interruptible() returns time left to wait, not error
+    code.  Return ERESTARTSYS when interrupted.
+    
+    While at it correct a comment and make the polling a bit
+    more aggressive.
+    
+    Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 1f02071358301e376f5a54e40531db37a1d7c7ab
+Merge: 2c867ac ca4a213
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Mar 21 13:10:17 2017 -0700
+
+    Merge tag 'scsi-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+    
+    Pull SCSI fixes from James Bottomley:
+     "Nine small fixes: the biggest is probably finally sorting out Kconfig
+      issues with lpfc nvme.  There are some performance fixes for megaraid
+      and hpsa and a static checker fix"
+    
+    [ Johannes Thumshirn points out that there still seems to be more lpfc
+      vs nvme config issues.  Oh well.   - Linus ]
+    
+    * tag 'scsi-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi:
+      scsi: lpfc: Finalize Kconfig options for nvme
+      scsi: ufs: don't check unsigned type for a negative value
+      scsi: hpsa: do not timeout reset operations
+      scsi: hpsa: limit outstanding rescans
+      scsi: hpsa: update check for logical volume status
+      scsi: megaraid_sas: Driver version upgrade
+      scsi: megaraid_sas: raid6 also require cpuSel check same as raid5
+      scsi: megaraid_sas: add correct return type check for ldio hint logic for raid1
+      scsi: megaraid_sas: enable intx only if msix request fails
+
+commit c4d453d2b14d4c844fd6b492fbd16ce0615a59d8
+Author: Doug Berger <opendmb@gmail.com>
+Date:   Mon Mar 13 17:41:38 2017 -0700
+
+    net: bcmgenet: correct return value of __bcmgenet_tx_reclaim
+    
+    The reclaim function should return the number of buffer descriptors
+    reclaimed, not just the number corresponding to skb packets.
+    
+    Also, remove the unnecessary computation when updating the consumer
+    index.
+    
+    While this is not a functional problem it could degrade performance
+    of napi in a fragmented transmit stream.
+    
+    Signed-off-by: Doug Berger <opendmb@gmail.com>
+    Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 49524b3c6e12375627ddd870613fcc6b24909898
+Author: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Date:   Fri Mar 10 03:22:13 2017 -0800
+
+    scsi: megaraid_sas: add correct return type check for ldio hint logic for raid1
+    
+    Return value check of atomic_dec_if_positive is required as it returns
+    old value minus one.  Without this fix, driver will send small ios to
+    firmware path and that will be a performance issue.
+    
+    Not critical, but good to have r1_ldio_hint as default value in sdev
+    private.
+    
+    Signed-off-by: Kashyap Desai <kashyap.desai@broadcom.com>
+    Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+    Reviewed-by: Tomas Henzl <thenzl@redhat.com>
+    Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+
+commit 252b95c0edead46fb188042584d3dcd6d6ede062
+Merge: b8989bc 4610d24
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Feb 21 13:53:41 2017 -0800
+
+    Merge tag 'for-linus-4.11-rc0-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip
+    
+    Pull xen updates from Juergen Gross:
+     "Xen features and fixes:
+    
+       - a series from Boris Ostrovsky adding support for booting Linux as
+         Xen PVH guest
+    
+       - a series from Juergen Gross streamlining the xenbus driver
+    
+       - a series from Paul Durrant adding support for the new device model
+         hypercall
+    
+       - several small corrections"
+    
+    * tag 'for-linus-4.11-rc0-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip:
+      xen/privcmd: add IOCTL_PRIVCMD_RESTRICT
+      xen/privcmd: Add IOCTL_PRIVCMD_DM_OP
+      xen/privcmd: return -ENOTTY for unimplemented IOCTLs
+      xen: optimize xenbus driver for multiple concurrent xenstore accesses
+      xen: modify xenstore watch event interface
+      xen: clean up xenbus internal headers
+      xenbus: Neaten xenbus_va_dev_error
+      xen/pvh: Use Xen's emergency_restart op for PVH guests
+      xen/pvh: Enable CPU hotplug
+      xen/pvh: PVH guests always have PV devices
+      xen/pvh: Initialize grant table for PVH guests
+      xen/pvh: Make sure we don't use ACPI_IRQ_MODEL_PIC for SCI
+      xen/pvh: Bootstrap PVH guest
+      xen/pvh: Import PVH-related Xen public interfaces
+      xen/x86: Remove PVH support
+      x86/boot/32: Convert the 32-bit pgtable setup code from assembly to C
+      xen/manage: correct return value check on xenbus_scanf()
+      x86/xen: Fix APIC id mismatch warning on Intel
+      xen/netback: set default upper limit of tx/rx queues to 8
+      xen/netfront: set default upper limit of tx/rx queues to 8
+
+commit 4fed1b125eb6252bde478665fc05d4819f774fa8
+Author: Jan Beulich <JBeulich@suse.com>
+Date:   Fri Feb 3 01:54:05 2017 -0700
+
+    xen/manage: correct return value check on xenbus_scanf()
+    
+    A negative return value indicates an error; in fact the function at
+    present won't ever return zero.
+    
+    Signed-off-by: Jan Beulich <jbeulich@suse.com>
+    Reviewed-by: Juergen Gross <jgross@suse.com>
+    Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+commit 107fded7bf616ad6f46823d98b8ed6405d7adf2d
+Author: Thomas Preisner <thomas.preisner+linux@fau.de>
+Date:   Fri Dec 30 03:37:53 2016 +0100
+
+    net: 3com: typhoon: typhoon_init_one: fix incorrect return values
+    
+    In a few cases the err-variable is not set to a negative error code if a
+    function call in typhoon_init_one() fails and thus 0 is returned
+    instead.
+    It may be better to set err to the appropriate negative error
+    code before returning.
+    
+    Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=188841
+    
+    Reported-by: Pan Bian <bianpan2016@163.com>
+    Signed-off-by: Thomas Preisner <thomas.preisner+linux@fau.de>
+    Signed-off-by: Milan Stephan <milan.stephan+linux@fau.de>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 19c75bcbe0113cbbf05e4d89e0502a23358bfca9
+Merge: ee84595 18e615a
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Dec 15 11:41:37 2016 -0800
+
+    Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+    
+    Pull crypto fixes from Herbert Xu:
+     "This fixes the following issues:
+    
+       - a crash regression in the new skcipher walker
+    
+       - incorrect return value in public_key_verify_signature
+    
+       - fix for in-place signing in the sign-file utility"
+    
+    * 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6:
+      crypto: skcipher - fix crash in virtual walk
+      sign-file: Fix inplace signing when src and dst names are both specified
+      crypto: asymmetric_keys - set error code on failure
+
+commit f91c58d68b8638530e0eb2fec76c5b9e429ca39a
+Author: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Date:   Wed Dec 7 14:52:53 2016 +0800
+
+    icmp: correct return value of icmp_rcv()
+    
+    Currently, icmp_rcv() always return zero on a packet delivery upcall.
+    
+    To make its behavior more compliant with the way this API should be
+    used, this patch changes this to let it return NET_RX_SUCCESS when the
+    packet is proper handled, and NET_RX_DROP otherwise.
+    
+    Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit c25badc9ceb612c6cc227a6fc4b0aaf678e3bcf9
+Author: Laura Abbott <labbott@redhat.com>
+Date:   Wed Oct 19 15:53:52 2016 -0700
+
+    cpupower: Correct return type of cpu_power_is_cpu_online() in cpufreq-set
+    
+    When converting to a shared library in ac5a181d065d ("cpupower: Add
+    cpuidle parts into library"), cpu_freq_cpu_exists() was converted to
+    cpupower_is_cpu_online(). cpu_req_cpu_exists() returned 0 on success and
+    -ENOSYS on failure whereas cpupower_is_cpu_online returns 1 on success.
+    Check for the correct return value in cpufreq-set.
+    
+    Link: https://bugzilla.redhat.com/show_bug.cgi?id=1374212
+    Fixes: ac5a181d065d (cpupower: Add cpuidle parts into library)
+    Reported-by: Julian Seward <jseward@acm.org>
+    Signed-off-by: Laura Abbott <labbott@redhat.com>
+    Acked-by: Thomas Renninger <trenn@suse.com>
+    Cc: 4.7+ <stable@vger.kernel.org> # 4.7+
+    Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+commit c067affcd316a36a28beaf8ea8c39db22a88c778
+Merge: b546e0c 21e2d9d
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Oct 28 18:34:19 2016 -0700
+
+    Merge tag 'acpi-4.9-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+    
+    Pull ACPI fixes from Rafael Wysocki:
+     "These fix recent ACPICA regressions, an older PCI IRQ management
+      regression, and an incorrect return value of a function in the APEI
+      code.
+    
+      Specifics:
+    
+       - Fix three ACPICA issues related to the interpreter locking and
+         introduced by recent changes in that area (Lv Zheng).
+    
+       - Fix a PCI IRQ management regression introduced during the 4.7 cycle
+         and related to the configuration of shared IRQs on systems with an
+         ISA bus (Sinan Kaya).
+    
+       - Fix up a return value of one function in the APEI code (Punit
+         Agrawal)"
+    
+    * tag 'acpi-4.9-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm:
+      ACPICA: Dispatcher: Fix interpreter locking around acpi_ev_initialize_region()
+      ACPICA: Dispatcher: Fix an unbalanced lock exit path in acpi_ds_auto_serialize_method()
+      ACPICA: Dispatcher: Fix order issue of method termination
+      ACPI / APEI: Fix incorrect return value of ghes_proc()
+      ACPI/PCI: pci_link: Include PIRQ_PENALTY_PCI_USING for ISA IRQs
+      ACPI/PCI: pci_link: penalize SCI correctly
+      ACPI/PCI/IRQ: assign ISA IRQ directly during early boot stages
+
+commit 21e2d9d5292f8a5cd1aa4e63891437589d233d35
+Merge: 8633db6 98756f5 806487a
+Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Date:   Sat Oct 29 01:58:03 2016 +0200
+
+    Merge branches 'acpica-fixes', 'acpi-pci-fixes' and 'acpi-apei-fixes'
+    
+    * acpica-fixes:
+      ACPICA: Dispatcher: Fix interpreter locking around acpi_ev_initialize_region()
+      ACPICA: Dispatcher: Fix an unbalanced lock exit path in acpi_ds_auto_serialize_method()
+      ACPICA: Dispatcher: Fix order issue of method termination
+    
+    * acpi-pci-fixes:
+      ACPI/PCI: pci_link: Include PIRQ_PENALTY_PCI_USING for ISA IRQs
+      ACPI/PCI: pci_link: penalize SCI correctly
+      ACPI/PCI/IRQ: assign ISA IRQ directly during early boot stages
+    
+    * acpi-apei-fixes:
+      ACPI / APEI: Fix incorrect return value of ghes_proc()
+
+commit 806487a8fc8f385af75ed261e9ab658fc845e633
+Author: Punit Agrawal <punit.agrawal@arm.com>
+Date:   Tue Oct 18 17:07:19 2016 +0100
+
+    ACPI / APEI: Fix incorrect return value of ghes_proc()
+    
+    Although ghes_proc() tests for errors while reading the error status,
+    it always return success (0). Fix this by propagating the return
+    value.
+    
+    Fixes: d334a49113a4a33 (ACPI, APEI, Generic Hardware Error Source memory error support)
+    Signed-of-by: Punit Agrawal <punit.agrawa.@arm.com>
+    Tested-by: Tyler Baicar <tbaicar@codeaurora.org>
+    Reviewed-by: Borislav Petkov <bp@suse.de>
+    [ rjw: Subject ]
+    Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+commit d8bfb96a2e3c42f91a9944a19638c043cb86dd8f
+Merge: 11ed3e0 08bf75b
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Oct 14 11:07:42 2016 -0700
+
+    Merge tag 'powerpc-4.9-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+    
+    Pull more powerpc updates from Michael Ellerman:
+     "Some more powerpc updates for 4.9:
+    
+      Freescale updates from Scott Wood:
+       - qbman support (a prerequisite for datapath drivers such as ethernet)
+       - a PCI DMA fix+improvement
+       - reset handler changes
+       - more 8xx optimizations
+       - some cleanups and fixes.'
+    
+      Fixes:
+       - selftests/powerpc: Add missing binaries to .gitignores (Michael Ellerman)
+       - selftests/powerpc: Fix build break caused by EXPORT_SYMBOL changes (Michael Ellerman)
+       - powerpc/pseries: Fix stack corruption in htpe code (Laurent Dufour)
+       - powerpc/64s: Fix power4_fixup_nap placement (Nicholas Piggin)
+       - powerpc/64: Fix incorrect return value from __copy_tofrom_user (Paul Mackerras)
+       - powerpc/mm/hash64: Fix might_have_hea() check (Michael Ellerman)
+    
+      Other:
+       - MAINTAINERS: Remove myself from PA Semi entries (Olof Johansson)
+       - MAINTAINERS: Drop separate pseries entry (Michael Ellerman)
+       - MAINTAINERS: Update powerpc website & add selftests (Michael Ellerman):
+    
+    * tag 'powerpc-4.9-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux: (35 commits)
+      powerpc/mm/hash64: Fix might_have_hea() check
+      powerpc/64: Fix incorrect return value from __copy_tofrom_user
+      powerpc/64s: Fix power4_fixup_nap placement
+      powerpc/pseries: Fix stack corruption in htpe code
+      selftests/powerpc: Fix build break caused by EXPORT_SYMBOL changes
+      MAINTAINERS: Update powerpc website & add selftests
+      MAINTAINERS: Drop separate pseries entry
+      MAINTAINERS: Remove myself from PA Semi entries
+      selftests/powerpc: Add missing binaries to .gitignores
+      arch/powerpc: Add CONFIG_FSL_DPAA to corenetXX_smp_defconfig
+      soc/qman: Add self-test for QMan driver
+      soc/bman: Add self-test for BMan driver
+      soc/fsl: Introduce DPAA 1.x QMan device driver
+      soc/fsl: Introduce DPAA 1.x BMan device driver
+      powerpc/8xx: make user addr DTLB miss the short path
+      powerpc/8xx: Move additional DTLBMiss handlers out of exception area
+      powerpc/8xx: use r3 to scratch CR in ITLBmiss
+      soc/fsl/qe: fix gpio save_regs functions
+      powerpc/8xx: add dedicated machine check handler
+      powerpc/8xx: add system_reset_exception
+      ...
+
+commit 1a34439e5a0b2235e43f96816dbb15ee1154f656
+Author: Paul Mackerras <paulus@ozlabs.org>
+Date:   Tue Oct 11 22:25:47 2016 +1100
+
+    powerpc/64: Fix incorrect return value from __copy_tofrom_user
+    
+    Debugging a data corruption issue with virtio-net/vhost-net led to
+    the observation that __copy_tofrom_user was occasionally returning
+    a value 16 larger than it should.  Since the return value from
+    __copy_tofrom_user is the number of bytes not copied, this means
+    that __copy_tofrom_user can occasionally return a value larger
+    than the number of bytes it was asked to copy.  In turn this can
+    cause higher-level copy functions such as copy_page_to_iter_iovec
+    to corrupt memory by copying data into the wrong memory locations.
+    
+    It turns out that the failing case involves a fault on the store
+    at label 79, and at that point the first unmodified byte of the
+    destination is at R3 + 16.  Consequently the exception handler
+    for that store needs to add 16 to R3 before using it to work out
+    how many bytes were not copied, but in this one case it was not
+    adding the offset to R3.  To fix it, this moves the label 179 to
+    the point where we add 16 to R3.  I have checked manually all the
+    exception handlers for the loads and stores in this code and the
+    rest of them are correct (it would be excellent to have an
+    automated test of all the exception cases).
+    
+    This bug has been present since this code was initially
+    committed in May 2002 to Linux version 2.5.20.
+    
+    Cc: stable@vger.kernel.org
+    Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+    Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+
+commit bc58493bd35f33feef27bcbdbcfa96e4a2fa43bf
+Merge: 0da4d28 41156ce
+Author: David S. Miller <davem@davemloft.net>
+Date:   Tue Sep 6 13:33:20 2016 -0700
+
+    Merge branch 'mediatek-rx-path-enhancements'
+    
+    Sean Wang says:
+    
+    ====================
+    net: ethernet: mediatek: add enhancements to RX path
+    
+    Changes since v1:
+    - fix message typos and add coverletter
+    
+    Changes since v2:
+    - split from the previous series for submitting add enhancements as
+    a series targeting 'net-next' and add indents before comments.
+    
+    Changes since v3:
+    - merge the patch using PDMA RX path
+    - fixed the input of mtk_poll_rx is with the remaining budget
+    
+    Changes since v4:
+    - save one wmb and register update when no packet is being handled
+    inside mtk_poll_rx call
+    - fixed incorrect return packet count from mtk_napi_rx
+    ====================
+    
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit cbf2f8a99a2337894c3592c9ac2170e8c1f8f73f
+Merge: fa8410b d649340
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Mon Sep 5 17:14:17 2016 +0200
+
+    Merge tag 'efi-urgent' of git://git.kernel.org/pub/scm/linux/kernel/git/mfleming/efi into efi/urgent
+    
+     * Make for_each_efi_memory_desc_in_map() safe on Xen and prevent an
+       infinte loop - Jan Beulich
+    
+     * Fix boot error on arm64 Qualcomm platforms by refactoring and
+       improving the ExitBootServices() hack we already for x86 and moving
+       it to the libstub - Jeffrey Hugo
+    
+     * Use correct return data type for of_get_flat_dt_subnode_by_name()
+       so that we correctly handle errors - Andrzej Hajda
+
+commit 549e5495467ac2a76489f1304e2b4a7ad85e1644
+Author: Sean Wang <sean.wang@mediatek.com>
+Date:   Thu Sep 1 10:47:28 2016 +0800
+
+    net: ethernet: mediatek: fix incorrect return value of devm_clk_get with EPROBE_DEFER
+    
+    1) If the return value of devm_clk_get is EPROBE_DEFER, we should
+    defer probing the driver. The change is verified and works based
+    on 4.8-rc1 staying with the latest clk-next code for MT7623.
+    2) Changing with the usage of loops to work out if all clocks
+    required are fine
+    
+    Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 528d28138f91009f230903bd89ccd44719667831
+Author: Peter Chen <peter.chen@nxp.com>
+Date:   Tue Jul 26 16:01:30 2016 +0800
+
+    usb: misc: usbtest: usbtest_do_ioctl may return positive integer
+    
+    For case 14 and case 21, their correct return value is the number
+    of bytes transferred, so it is a positive integer. But in usbtest_ioctl,
+    it takes non-zero as false return value for usbtest_do_ioctl, so
+    it will treat the correct test as wrong test, then the time on
+    tests will be the minus value.
+    
+    Signed-off-by: Peter Chen <peter.chen@nxp.com>
+    Cc: stable <stable@vger.kernel.org>
+    Fixes: 18fc4ebdc705 ("usb: misc: usbtest: Remove timeval usage")
+    Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+
+commit 28324936f3d672bbf83472fece8f36a158a52276
+Author: Peter Chen <peter.chen@nxp.com>
+Date:   Tue Jul 26 16:01:30 2016 +0800
+
+    usb: misc: usbtest: usbtest_do_ioctl may return positive integer
+    
+    For case 14 and case 21, their correct return value is the number
+    of bytes transferred, so it is a positive integer. But in usbtest_ioctl,
+    it takes non-zero as false return value for usbtest_do_ioctl, so
+    it will treat the correct test as wrong test, then the time on
+    tests will be the minus value.
+    
+    Signed-off-by: Peter Chen <peter.chen@nxp.com>
+    Cc: stable <stable@vger.kernel.org>
+    Fixes: 18fc4ebdc705 ("usb: misc: usbtest: Remove timeval usage")
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit 162b20d2f9ef9dfa833cc329b1e8957beb672349
+Merge: c3f8d86 5ef8292
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Thu Jul 28 05:51:39 2016 +1000
+
+    Merge branch 'drm-next-4.8' of git://people.freedesktop.org/~agd5f/linux into drm-next
+    
+    A few more patches for 4.8.  Mostly bug fixes and some prep work
+    for iceland powerplay support.  I have a couple polaris patches and
+    Edward's misc cleanups that require a merge with Linus'.  I don't know
+    if you are planning a merge anytime soon.
+    
+    [airlied: fixed up endian vs 32-bit change in ppatomctrl]
+    
+    * 'drm-next-4.8' of git://people.freedesktop.org/~agd5f/linux: (26 commits)
+      drm/amdgpu: comment out unused defaults_bonaire_pro static const structures to fix the build
+      drm/amdgpu: temporary comment out unused static const structures to fix the build
+      drm/amdgpu: S3 resume fail on Polaris10
+      drm/amd/powerplay: add pp_tables_get_response_times function in process pptables
+      drm/amd/powerplay: fix the incorrect return value
+      drm/amd/powerplay: add atomctrl_get_voltage_evv function in ppatomctrl
+      drm/amdgpu: add new definitions into ppsmc.h for iceland
+      drm/amd/powerplay: add SMU register macro for future use
+      drm/amdgpu: add ucode_start_address into cgs_firmware_info
+      drm/amdgpu: no need load microcode at sdma if powerplay is enabled
+      drm/amdgpu: rename smumgr to smum for dpm
+      drm/amdgpu: disable GFX PG on CZ/BR/ST
+      drivers: gpu: drm: amd: powerplay: hwmgr: Remove unused variable
+      drm/amdgpu: return -ENOSPC when running out of UVD handles
+      drm/amdgpu: trace need_flush in grab_vm as well
+      drm/amdgpu: always signal all fences
+      drm/amdgpu: check flush fence context instead of same ring v2
+      drm/radeon: support backlight control for UNIPHY3
+      drm/amdgpu: support backlight control for UNIPHY3
+      drm/amdgpu: remove usec timeout loop from IB tests
+      ...
+
+commit bec5f70dad45f7ad63f97aa0988821532ebeade7
+Author: Huang Rui <ray.huang@amd.com>
+Date:   Tue Jul 12 14:31:23 2016 +0800
+
+    drm/amd/powerplay: fix the incorrect return value
+    
+    The return value 0 (false) means fail to find GPIO in
+    atomctrl_get_pp_assign_pin. "-1" returns true as bool actually.
+    
+    Signed-off-by: Huang Rui <ray.huang@amd.com>
+    Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+    Cc: <stable@vger.kernel.org>
+    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+
+commit 73e81350ad7a45117c17fb3ec433a266b3fa7d78
+Author: David Binder <david.binder@unisys.com>
+Date:   Fri May 13 23:17:22 2016 -0400
+
+    staging: unisys: visornic: change return statements
+    
+    Changes return statements in visornic_rx() to use literals instead of a
+    variable. Also changes function description to reflect the correct return
+    type.
+    
+    Signed-off-by: David Binder <david.binder@unisys.com>
+    Signed-off-by: David Kershner <david.kershner@unisys.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit f6c658df63856db3bf8f467024b1dbee37b5399c
+Merge: 07be133 0f3311a
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat May 21 18:25:28 2016 -0700
+
+    Merge tag 'for-f2fs-4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs
+    
+    Pull f2fs updates from Jaegeuk Kim:
+     "In this round, as Ted pointed out, fscrypto allows one more key prefix
+      given by filesystem to resolve backward compatibility issues.  Other
+      than that, we've fixed several error handling cases by introducing
+      a fault injection facility.  We've also achieved performance
+      improvement in some workloads as well as a bunch of bug fixes.
+    
+      Summary:
+    
+      Enhancements:
+       - fs-specific prefix for fscrypto
+       - fault injection facility
+       - expose validity bitmaps for user to be aware of fragmentation
+       - fallocate/rm/preallocation speed up
+       - use percpu counters
+    
+      Bug fixes:
+       - some inline_dentry/inline_data bugs
+       - error handling for atomic/volatile/orphan inodes
+       - recover broken superblock"
+    
+    * tag 'for-f2fs-4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs: (73 commits)
+      f2fs: fix to update dirty page count correctly
+      f2fs: flush pending bios right away when error occurs
+      f2fs: avoid ENOSPC fault in the recovery process
+      f2fs: make exit_f2fs_fs more clear
+      f2fs: use percpu_counter for total_valid_inode_count
+      f2fs: use percpu_counter for alloc_valid_block_count
+      f2fs: use percpu_counter for # of dirty pages in inode
+      f2fs: use percpu_counter for page counters
+      f2fs: use bio count instead of F2FS_WRITEBACK page count
+      f2fs: manipulate dirty file inodes when DATA_FLUSH is set
+      f2fs: add fault injection to sysfs
+      f2fs: no need inc dirty pages under inode lock
+      f2fs: fix incorrect error path handling in f2fs_move_rehashed_dirents
+      f2fs: fix i_current_depth during inline dentry conversion
+      f2fs: correct return value type of f2fs_fill_super
+      f2fs: fix deadlock when flush inline data
+      f2fs: avoid f2fs_bug_on during recovery
+      f2fs: show # of orphan inodes
+      f2fs: support in batch fzero in dnode page
+      f2fs: support in batch multi blocks preallocation
+      ...
+
+commit 99e3e858a486ccef93da0d4b67a71ed1c171b2fe
+Author: Sheng Yong <shengyong1@huawei.com>
+Date:   Wed May 11 17:08:14 2016 +0800
+
+    f2fs: correct return value type of f2fs_fill_super
+    
+    Signed-off-by: Sheng Yong <shengyong1@huawei.com>
+    Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+commit 6eae29e7e7144d01a6d6af111d232b36cdd30f51
+Author: Eric Biggers <ebiggers3@gmail.com>
+Date:   Sat Apr 2 10:54:56 2016 -0500
+
+    crypto: doc - document correct return value for request allocation
+    
+    Signed-off-by: Eric Biggers <ebiggers3@gmail.com>
+    Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+commit b4cec5f66849872d2e9573bc95c2016cb8e530ec
+Merge: 895a106 4f1b50c
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat Mar 26 11:37:42 2016 -0700
+
+    Merge tag 'ntb-4.6' of git://github.com/jonmason/ntb
+    
+    Pull NTB bug fixes from Jon Mason:
+     "NTB bug fixes for tasklet from spinning forever, link errors,
+      translation window setup, NULL ptr dereference, and ntb-perf errors.
+    
+      Also, a modification to the driver API that makes _addr functions
+      optional"
+    
+    * tag 'ntb-4.6' of git://github.com/jonmason/ntb:
+      NTB: Remove _addr functions from ntb_hw_amd
+      NTB: Make _addr functions optional in the API
+      NTB: Fix incorrect clean up routine in ntb_perf
+      NTB: Fix incorrect return check in ntb_perf
+      ntb: fix possible NULL dereference
+      ntb: add missing setup of translation window
+      ntb: stop link work when we do not have memory
+      ntb: stop tasklet from spinning forever during shutdown.
+      ntb: perf test: fix address space confusion
+
+commit ddc8f6feec76b5deea8090db015920a283006044
+Author: Dave Jiang <dave.jiang@intel.com>
+Date:   Fri Mar 18 16:39:41 2016 -0700
+
+    NTB: Fix incorrect return check in ntb_perf
+    
+    kthread_create_no_node() returns error pointers, never NULL. Fix check so
+    it handles error correctly.
+    
+    Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+    Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+    Signed-off-by: Jon Mason <jdmason@kudzu.us>
+
+commit 8dfd329fbc240729938d24bf87aca49ea89289c5
+Author: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Date:   Fri Mar 4 14:07:54 2016 +0000
+
+    arp: correct return value of arp_rcv
+    
+    Currently, arp_rcv() always return zero on a packet delivery upcall.
+    
+    To make its behavior more compliant with the way this API should be
+    used, this patch changes this to let it return NET_RX_SUCCESS when the
+    packet is proper handled, and NET_RX_DROP otherwise.
+    
+    v1->v2:
+    If sanity check is failed, call kfree_skb() instead of consume_skb(), then
+    return the correct return value.
+    
+    Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 9def1e9216acb56135f264d7840c8008c3655536
+Author: Chao Yu <chao2.yu@samsung.com>
+Date:   Wed Feb 17 16:45:44 2016 +0800
+
+    f2fs: detect error of update_dent_inode in ->rename
+    
+    Should check and show correct return value of update_dent_inode in
+    ->rename.
+    
+    Signed-off-by: Chao Yu <chao2.yu@samsung.com>
+    Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+commit 26dee028d365fbc0e3326606a8520260b4462381
+Author: Wang Nan <wangnan0@huawei.com>
+Date:   Fri Feb 19 11:43:52 2016 +0000
+
+    perf tools: Fix checking asprintf return value
+    
+    According to man pages, asprintf returns -1 when failure. This patch
+    fixes two incorrect return value checker.
+    
+    Signed-off-by: Wang Nan <wangnan0@huawei.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexei Starovoitov <ast@kernel.org>
+    Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+    Cc: Cody P Schafer <dev@codyps.com>
+    Cc: He Kuang <hekuang@huawei.com>
+    Cc: Jeremie Galarneau <jeremie.galarneau@efficios.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Kirill Smelkov <kirr@nexedi.com>
+    Cc: Li Zefan <lizefan@huawei.com>
+    Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Zefan Li <lizefan@huawei.com>
+    Cc: pi3orama@163.com
+    Cc: stable@vger.kernel.org # v4.4+
+    Fixes: ffeb883e5662 ("perf tools: Show proper error message for wrong terms of hw/sw events")
+    Link: http://lkml.kernel.org/r/1455882283-79592-5-git-send-email-wangnan0@huawei.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+commit 2e498f25b0daa9dec761e3e880024ff7417f2445
+Author: Nicholas Bellinger <nab@linux-iscsi.org>
+Date:   Wed Feb 10 20:34:56 2016 -0800
+
+    target: Fix incorrect unmap_zeroes_data_store return
+    
+    This patch fixes an incorrect return of zero from the new
+    unmap_zeroes_data_store() configfs store attribute handler
+    introduced in v4.5-rc1, to use the correct 'count' bytes
+    return value.
+    
+    Signed-off-by: Nicholas Bellinger <nab@linux-iscsi.org>
+
+commit dacd53c80525809cc9ce85e3a4ad409d15209f2a
+Merge: 5af9c2e 5982557
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat Feb 6 22:13:16 2016 -0800
+
+    Merge tag 'staging-4.5-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+    
+    Pull staging and IIO driver fixes from Greg KH:
+     "Here are some IIO and staging driver fixes for 4.5-rc3.
+    
+      All of them, except one, are for IIO drivers, and one is for a speakup
+      driver fix caused by some earlier patches, to resolve a reported build
+      failure"
+    
+    * tag 'staging-4.5-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging:
+      Staging: speakup: Fix allyesconfig build on mn10300
+      iio: dht11: Use boottime
+      iio: ade7753: avoid uninitialized data
+      iio: pressure: mpl115: fix temperature offset sign
+      iio: imu: Fix dependencies for !HAS_IOMEM archs
+      staging: iio: Fix dependencies for !HAS_IOMEM archs
+      iio: adc: Fix dependencies for !HAS_IOMEM archs
+      iio: inkern: fix a NULL dereference on error
+      iio:adc:ti_am335x_adc Fix buffered mode by identifying as software buffer.
+      iio: light: acpi-als: Report data as processed
+      iio: dac: mcp4725: set iio name property in sysfs
+      iio: add HAS_IOMEM dependency to VF610_ADC
+      iio: add IIO_TRIGGER dependency to STK8BA50
+      iio: proximity: lidar: correct return value
+      iio-light: Use a signed return type for ltr501_match_samp_freq()
+
+commit 9979e320b559264333a77c73131ae88cefca15e5
+Author: Matt Ranostay <mranostay@gmail.com>
+Date:   Sat Dec 26 20:56:30 2015 -0800
+
+    iio: proximity: lidar: correct return value
+    
+    lidar_i2c_xfer() function was never a non-positive value on error,
+    and this correct that with a -EIO return code.
+    
+    Fixes: 366e65633cf4 ("iio: proximity: lidar: optimize i2c transactions")
+    Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+    Signed-off-by: Jonathan Cameron <jic23@kernel.org>
+
+commit ab997ad408394bcaf7f3015d4c4e38047eaf2ad6
+Author: lucien <lucien.xin@gmail.com>
+Date:   Fri Oct 23 15:36:53 2015 +0800
+
+    ipv6: fix the incorrect return value of throw route
+    
+    The error condition -EAGAIN, which is signaled by throw routes, tells
+    the rules framework to walk on searching for next matches. If the walk
+    ends and we stop walking the rules with the result of a throw route we
+    have to translate the error conditions to -ENETUNREACH.
+    
+    Signed-off-by: Xin Long <lucien.xin@gmail.com>
+    Signed-off-by: Hannes Frederic Sowa <hannes@stressinduktion.org>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 538e17e7e96e14f76bb82dd83290a5315da70c3b
+Author: Nicholas Krause <xerofoify@gmail.com>
+Date:   Sun Sep 6 08:28:46 2015 -0400
+
+    f2fs: fix incorrect return statement in the function f2fs_ioc_release_volatile_write
+    
+    This fixes the incorrect return statement at the end of the function
+    f2fs_ioc_release_volatile_write's body for returning zero as this is
+    incorrect due to the function call before this return statement to
+    the function punch_hole being able to fail and we should return this
+    function's return fail directly in order to signal to callers of the
+    function f2fs_ioc_release_volatile if a failure arises with this call
+    to punch_hole fails.
+    
+    Signed-off-by: Nicholas Krause <xerofoify@gmail.com>
+    Reviewed-by: Chao Yu <chao2.yu@samsung.com>
+    Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+commit 6394328ab8a2ab6b127ae85f716943d92595878d
+Author: Chao Yu <chao2.yu@samsung.com>
+Date:   Fri Aug 7 18:36:06 2015 +0800
+
+    f2fs: report error of fill_zero
+    
+    fill_zero can fail due to a lot of reason, but previously we do not handle
+    its return value, so its callers such as punch_hole/f2fs_zero_range may
+    report success, but actually can fail because of error occurs inside
+    fill_zero.
+    
+    This patch fixes to report correct return value of fill_zero.
+    
+    Signed-off-by: Chao Yu <chao2.yu@samsung.com>
+    Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+commit 037fe70c9a6cebe11ae13402994b844e907ebe0c
+Author: Chao Yu <chao2.yu@samsung.com>
+Date:   Mon Jul 13 17:45:19 2015 +0800
+
+    f2fs: correct return value of ->setxattr
+    
+    This patch fixes to return correct error number of ->setxattr, which
+    is reported by xfstest tests/generic/026 as below:
+    
+    generic/026      - output mismatch
+        --- tests/generic/026.out
+        +++ results/generic/026.out.bad
+        @@ -4,6 +4,6 @@
+         1 below acl max
+         acl max
+         1 above acl max
+        -chacl: cannot set access acl on "largeaclfile": Argument list too long
+        +chacl: cannot set access acl on "largeaclfile": Numerical result out of range
+         use 16 aces
+         use 17 aces
+        ...
+    Ran: generic/026
+    Failures: generic/026
+    Failed 1 of 1 tests
+    
+    Signed-off-by: Chao Yu <chao2.yu@samsung.com>
+    Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+commit 883a2dfd6f13eca5aab30f0bcc9a6f1e2f983b1e
+Merge: 331c584 8076ca4
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Jul 8 17:34:51 2015 -0700
+
+    Merge tag 'pm+acpi-4.2-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+    
+    Pull power management and ACPI updates from Rafael Wysocki:
+     "These are fixes on top of the previous PM+ACPI pull requests
+      (including one fix for a 4.1 regression) and two commits adding
+      _CLS-based device enumeration support to the ACPI core and the ATA
+      subsystem that waited for the latest ACPICA changes to be merged.
+    
+      Specifics:
+    
+       - Fix for an ACPI resources management regression introduced during
+         the 4.1 cycle (that unfortunately went into -stable) effectively
+         reverting the bad commit along with the recent fixups on top of it
+         and using an alternative approach to address the underlying issue
+         (Rafael J Wysocki).
+    
+       - Fix for a memory leak and an incorrect return value in an error
+         code path in the ACPI LPSS (Low-Power Subsystem) driver (Rafael J
+         Wysocki).
+    
+       - Fix for a leftover dangling pointer in an error code path in the
+         new wakeup IRQ support code (Rafael J Wysocki).
+    
+       - Fix to prevent infinite loops (due to errors in other places) from
+         happening in the core generic PM domains support code (Geert
+         Uytterhoeven).
+    
+       - Hibernation documentation update/clarification (Uwe Geuder).
+    
+       - Support for _CLS-based device enumeration in the ACPI core and in
+         the ATA subsystem (Suravee Suthikulpanit)"
+    
+    * tag 'pm+acpi-4.2-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm:
+      PM / wakeirq: Avoid setting power.wakeirq too hastily
+      ata: ahci_platform: Add ACPI _CLS matching
+      ACPI / scan: Add support for ACPI _CLS device matching
+      PM / hibernate: clarify resume documentation
+      PM / Domains: Avoid infinite loops in attach/detach code
+      ACPI / LPSS: Fix up acpi_lpss_create_device()
+      ACPI / PNP: Reserve ACPI resources at the fs_initcall_sync stage
+
+commit 2dd02d742535fe0114f1957afe8685856bdfebac
+Author: Robert Elliott <elliott@hp.com>
+Date:   Thu Apr 23 09:33:43 2015 -0500
+
+    hpsa: correct return values from driver functions.
+    
+    correct return codes for error conditions
+    
+    Reviewed-by: Scott Teel <scott.teel@pmcs.com>
+    Reviewed-by: Kevin Barnett <kevin.barnett@pmcs.com>
+    Reviewed-by: Tomas Henzl <thenzl@redhat.com>
+    Reviewed-by: Hannes Reinecke <hare@Suse.de>
+    Signed-off-by: Robert Elliott <elliott@hp.com>
+    Signed-off-by: Don Brace <don.brace@pmcs.com>
+    Reviewed-by: Christoph Hellwig <hch@lst.de>
+    Signed-off-by: James Bottomley <JBottomley@Odin.com>
+
+commit 2f8126e3964261db3184d95bff1ae801e61239e9
+Merge: 0c68e5b 7cded34
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu May 21 19:54:50 2015 -0700
+
+    Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+    
+    Pull s390 fixes from Martin Schwidefsky:
+     "Bug fixes.
+    
+      Three for our crypto code, two for eBPF, and one memory management fix
+      to get machines with memory > 8TB working"
+    
+    * 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux:
+      s390/mm: correct return value of pmd_pfn
+      s390/crypto: fix stckf loop
+      s390/zcrypt: Fix invalid domain handling during ap module unload
+      s390/bpf: Fix gcov stack space problem
+      s390/zcrypt: fixed ap poll timer behavior
+      s390/bpf: Adjust ALU64_DIV/MOD to match interpreter change
+
+commit 7cded342c09f633666e71ee1ce048f218a9c5836
+Author: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Date:   Wed May 13 14:33:22 2015 +0200
+
+    s390/mm: correct return value of pmd_pfn
+    
+    Git commit 152125b7a882df36a55a8eadbea6d0edf1461ee7
+    "s390/mm: implement dirty bits for large segment table entries"
+    broke the pmd_pfn function, it changed the return value from
+    'unsigned long' to 'int'. This breaks all machine configurations
+    with memory above the 8TB line.
+    
+    Cc: stable@vger.kernel.org # 3.17+
+    Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+
+commit 861fb1078fd4ea09b442987b3e20fced0f15eb92
+Author: Joe Perches <joe@perches.com>
+Date:   Tue May 12 18:28:23 2015 -0700
+
+    netfilter: Use correct return for seq_show functions
+    
+    Using seq_has_overflowed doesn't produce the right return value.
+    Either 0 or -1 is, but 0 is much more common and works well when
+    seq allocation retries.
+    
+    I believe this doesn't matter as the initial allocation is always
+    sufficient, this is just a correctness patch.
+    
+    Miscellanea:
+    
+    o Don't use strlen, use *ptr to determine if a string
+      should be emitted like all the other tests here
+    o Delete unnecessary return statements
+    
+    Signed-off-by: Joe Perches <joe@perches.com>
+    Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+
+commit c3fe5872eb3f5f9e027d61d8a3f5d092168fdbca
+Author: Sanidhya Kashyap <sanidhya.gatech@gmail.com>
+Date:   Thu Apr 16 12:48:32 2015 -0700
+
+    bfs: correct return values
+    
+    In case of failed memory allocation, the return should be ENOMEM instead
+    of ENOSPC.
+    
+    Return -EIO when sb_bread() fails.
+    
+    Signed-off-by: Sanidhya Kashyap <sanidhya.gatech@gmail.com>
+    Cc: Tigran Aivazian <tigran@aivazian.fsnet.co.uk>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit b796410630a0f090864d7595c6bffbc0136f0f8c
+Author: Sanidhya Kashyap <sanidhya.gatech@gmail.com>
+Date:   Thu Apr 16 12:48:13 2015 -0700
+
+    adfs: return correct return values
+    
+    Fix the wrong values returned by various functions such as EIO and ENOMEM.
+    
+    Signed-off-by: Sanidhya Kashyap <sanidhya.gatech@gmail.com>
+    Cc: Fabian Frederick <fabf@skynet.be>
+    Cc: Joe Perches <joe@perches.com>
+    Cc: Taesoo kim <taesoo@gatech.edu>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit 27a4e3884e9c6497f96cc28256c3cdaa93d4cf97
+Author: Chengyu Song <csong84@gatech.edu>
+Date:   Thu Apr 16 12:47:12 2015 -0700
+
+    hfsplus: incorrect return value
+    
+    In case of memory allocation error, the return should be -ENOMEM, instead
+    of -ENOSPC.
+    
+    Signed-off-by: Chengyu Song <csong84@gatech.edu>
+    Reviewed-by: Sergei Antonov <saproj@gmail.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit 13f244852f1197b623af2d3076fae197d2e038ec
+Author: Chengyu Song <csong84@gatech.edu>
+Date:   Thu Apr 16 12:46:53 2015 -0700
+
+    hfs: incorrect return values
+    
+    In case of memory allocation error, the return should be -ENOMEM, instead
+    of -ENOSPC.
+    
+    Signed-off-by: Chengyu Song <csong84@gatech.edu>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit a2a6937da0b95644008ede0eb309493d16cf2ac2
+Merge: f5e25f0 3cd1ce0
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat Feb 21 11:53:00 2015 -0800
+
+    Merge tag 'sound-fix-3.20-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+    
+    Pull sound fixes from Takashi Iwai:
+     "Here are a few small fix patches for 3.20-rc1:
+    
+       - Quirks for Denon and Lifecam USB-audio devices and HD-audio on HP
+         laptops
+       - A long-time regression fix for HDSP eMADI
+       - Add missing DRAIN_TRIGGER flag set for ASoC intel-sst
+       - Trivial fixes for sequencer core and HD-audio Tegra, a LINE6
+         cleanup"
+    
+    * tag 'sound-fix-3.20-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound:
+      ALSA: usb: Fix support for Denon DA-300USB DAC (ID 154e:1003)
+      ASoC: Intel: add SNDRV_PCM_INFO_DRAIN_TRIGGER flag
+      ALSA: usb-audio: Don't attempt to get Lifecam HD-5000 sample rate
+      ALSA: hda/tegra check correct return value from ioremap_resource
+      ALSA: hdspm - Constrain periods to 2 on older cards
+      ALSA: hda - enable mute led quirk for one more hp machine.
+      ALSA: seq: potential out of bounds in do_control()
+      ALSA: line6: Improve line6_read/write_data() interfaces
+
+commit 93ceaa303b2946453b925c55dc28a4273520dd18
+Author: Eliot Blennerhassett <eliot@blennerhassett.gen.nz>
+Date:   Sat Feb 14 15:32:24 2015 +1300
+
+    ALSA: hda/tegra check correct return value from ioremap_resource
+    
+    Signed-off-by: Eliot Blennerhassett <eliot@blennerhassett.gen.nz>
+    Signed-off-by: Takashi Iwai <tiwai@suse.de>
+
+commit 55ad359225b2232b9b8f04a0dfa169bd3a7d86d2
+Author: Yishai Hadas <yishaih@mellanox.com>
+Date:   Sun Jan 25 16:59:42 2015 +0200
+
+    net/mlx4_core: Enable device recovery flow with SRIOV
+    
+    In SRIOV, both the PF and the VF may attempt device recovery whenever they
+    assume that the device is not functioning.  When the PF driver resets the
+    device, the VF should detect this and attempt to reinitialize itself.
+    
+    The VF must be able to reset itself under all circumstances, even
+    if the PF is not responsive.
+    
+    The VF shall reset itself in the following cases:
+    
+    1. Commands are not processed within reasonable time over the communication channel.
+    This is done considering device state and the correct return code based on
+    the command as was done in the native mode, done in the next patch.
+    
+    2. The VF driver receives an internal error event reported by the PF on the
+    communication channel. This occurs when the PF driver resets the device or
+    when VF is out of sync with the PF.
+    
+    Add 'VF reset' capability, which allows the VF to reinitialize itself even when the
+    PF is not responsive.
+    
+    As PF and VF may run their reset flow simulantanisly, there are several cases
+    that are handled:
+    - Prevent freeing VF resources upon FLR, when PF is in its unloading stage.
+    - Prevent PF getting VF commands before it has finished initializing its resources.
+    - Upon VF startup, check that comm-channel is online before sending
+      commands to the PF and getting timed-out.
+    
+    Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+    Signed-off-by: Or Gerlitz <ogerlitz@mellanox.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 4d76bbed2d8d9f7bf8bca31e64ef977e015a86fa
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Tue Jan 13 22:17:03 2015 +0100
+
+    dmaengine: coh901318: fix function return types build warnings
+    
+    A recent patch that removed coh901318_control() replaced it
+    with a number of pointers to existing functions, but those
+    unfortunately have the wrong return  type and need to be
+    changed to return an 'int' with an error value rather than
+    a 'void' to avoid these build warnings:
+    
+    drivers/dma/coh901318.c:2697:32: warning: assignment from incompatible pointer type
+      base->dma_slave.device_config = coh901318_dma_set_runtimeconfig;
+                                    ^
+    drivers/dma/coh901318.c:2698:31: warning: assignment from incompatible pointer type
+      base->dma_slave.device_pause = coh901318_pause;
+                                   ^
+    drivers/dma/coh901318.c:2699:32: warning: assignment from incompatible pointer type
+      base->dma_slave.device_resume = coh901318_resume
+    
+    The coh901318_base_init function has the correct return type
+    already, but needs to be marked 'static' to avoid a sparse
+    warning about a missing declaration.
+    
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+    Fixes: 6782af118b6c ("dmaengine: coh901318: Split device_control")
+    Acked-by: Linus Walleij <linus.walleij@linaro.org>
+    Signed-off-by: Vinod Koul <vinod.koul@intel.com>
+
+commit 23aa4b416afdf37869e53c188944dd7c4c47949a
+Merge: cb59670 ce1039b
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat Jan 17 07:55:52 2015 +1300
+
+    Merge tag 'trace-fixes-v3.19-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace
+    
+    Pull ftrace fixes from Steven Rostedt:
+     "This holds a few fixes to the ftrace infrastructure as well as the
+      mixture of function graph tracing and kprobes.
+    
+      When jprobes and function graph tracing is enabled at the same time it
+      will crash the system:
+    
+          # modprobe jprobe_example
+          # echo function_graph > /sys/kernel/debug/tracing/current_tracer
+    
+      After the first fork (jprobe_example probes it), the system will
+      crash.
+    
+      This is due to the way jprobes copies the stack frame and does not do
+      a normal function return.  This messes up with the function graph
+      tracing accounting which hijacks the return address from the stack and
+      replaces it with a hook function.  It saves the return addresses in a
+      separate stack to put back the correct return address when done.  But
+      because the jprobe functions do not do a normal return, their stack
+      addresses are not put back until the function they probe is called,
+      which means that the probed function will get the return address of
+      the jprobe handler instead of its own.
+    
+      The simple fix here was to disable function graph tracing while the
+      jprobe handler is being called.
+    
+      While debugging this I found two minor bugs with the function graph
+      tracing.
+    
+      The first was about the function graph tracer sharing its function
+      hash with the function tracer (they both get filtered by the same
+      input).  The changing of the set_ftrace_filter would not sync the
+      function recording records after a change if the function tracer was
+      disabled but the function graph tracer was enabled.  This was due to
+      the update only checking one of the ops instead of the shared ops to
+      see if they were enabled and should perform the sync.  This caused the
+      ftrace accounting to break and a ftrace_bug() would be triggered,
+      disabling ftrace until a reboot.
+    
+      The second was that the check to update records only checked one of
+      the filter hashes.  It needs to test both the "filter" and "notrace"
+      hashes.  The "filter" hash determines what functions to trace where as
+      the "notrace" hash determines what functions not to trace (trace all
+      but these).  Both hashes need to be passed to the update code to find
+      out what change is being done during the update.  This also broke the
+      ftrace record accounting and triggered a ftrace_bug().
+    
+      This patch set also include two more fixes that were reported
+      separately from the kprobe issue.
+    
+      One was that init_ftrace_syscalls() was called twice at boot up.  This
+      is not a major bug, but that call performed a rather large kmalloc
+      (NR_syscalls * sizeof(*syscalls_metadata)).  The second call made the
+      first one a memory leak, and wastes memory.
+    
+      The other fix is a regression caused by an update in the v3.19 merge
+      window.  The moving to enable events early, moved the enabling before
+      PID 1 was created.  The syscall events require setting the
+      TIF_SYSCALL_TRACEPOINT for all tasks.  But for_each_process_thread()
+      does not include the swapper task (PID 0), and ended up being a nop.
+    
+      A suggested fix was to add the init_task() to have its flag set, but I
+      didn't really want to mess with PID 0 for this minor bug.  Instead I
+      disable and re-enable events again at early_initcall() where it use to
+      be enabled.  This also handles any other event that might have its own
+      reg function that could break at early boot up"
+    
+    * tag 'trace-fixes-v3.19-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace:
+      tracing: Fix enabling of syscall events on the command line
+      tracing: Remove extra call to init_ftrace_syscalls()
+      ftrace/jprobes/x86: Fix conflict between jprobes and function graph tracing
+      ftrace: Check both notrace and filter for old hash
+      ftrace: Fix updating of filters for shared global_ops filters
+
+commit b6c92b7e0af575e2b8b05bdf33633cf9e1661cbf
+Author: Hannes Reinecke <hare@suse.de>
+Date:   Thu Oct 30 09:44:36 2014 +0100
+
+    scsi: correct return values for .eh_abort_handler implementations
+    
+    The .eh_abort_handler needs to return SUCCESS, FAILED, or
+    FAST_IO_FAIL. So fixup all callers to adhere to this requirement.
+    
+    Reviewed-by: Robert Elliott <elliott@hp.com>
+    Cc: <stable@vger.kernel.org>
+    Signed-off-by: Hannes Reinecke <hare@suse.de>
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+commit 89453379aaf0608253124057df6cd8ac63948135
+Merge: 5342929 99a49ce
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Oct 31 15:04:58 2014 -0700
+
+    Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+    
+    Pull networking fixes from David Miller:
+     "A bit has accumulated, but it's been a week or so since my last batch
+      of post-merge-window fixes, so...
+    
+       1) Missing module license in netfilter reject module, from Pablo.
+          Lots of people ran into this.
+    
+       2) Off by one in mac80211 baserate calculation, from Karl Beldan.
+    
+       3) Fix incorrect return value from ax88179_178a driver's set_mac_addr
+          op, which broke use of it with bonding.  From Ian Morgan.
+    
+       4) Checking of skb_gso_segment()'s return value was not all
+          encompassing, it can return an SKB pointer, a pointer error, or
+          NULL.  Fix from Florian Westphal.
+    
+          This is crummy, and longer term will be fixed to just return error
+          pointers or a real SKB.
+    
+       6) Encapsulation offloads not being handled by
+          skb_gso_transport_seglen().  From Florian Westphal.
+    
+       7) Fix deadlock in TIPC stack, from Ying Xue.
+    
+       8) Fix performance regression from using rhashtable for netlink
+          sockets.  The problem was the synchronize_net() invoked for every
+          socket destroy.  From Thomas Graf.
+    
+       9) Fix bug in eBPF verifier, and remove the strong dependency of BPF
+          on NET.  From Alexei Starovoitov.
+    
+      10) In qdisc_create(), use the correct interface to allocate
+          ->cpu_bstats, otherwise the u64_stats_sync member isn't
+          initialized properly.  From Sabrina Dubroca.
+    
+      11) Off by one in ip_set_nfnl_get_byindex(), from Dan Carpenter.
+    
+      12) nf_tables_newchain() was erroneously expecting error pointers from
+          netdev_alloc_pcpu_stats().  It only returna a valid pointer or
+          NULL.  From Sabrina Dubroca.
+    
+      13) Fix use-after-free in _decode_session6(), from Li RongQing.
+    
+      14) When we set the TX flow hash on a socket, we mistakenly do so
+          before we've nailed down the final source port.  Move the setting
+          deeper to fix this.  From Sathya Perla.
+    
+      15) NAPI budget accounting in amd-xgbe driver was counting descriptors
+          instead of full packets, fix from Thomas Lendacky.
+    
+      16) Fix total_data_buflen calculation in hyperv driver, from Haiyang
+          Zhang.
+    
+      17) Fix bcma driver build with OF_ADDRESS disabled, from Hauke
+          Mehrtens.
+    
+      18) Fix mis-use of per-cpu memory in TCP md5 code.  The problem is
+          that something that ends up being vmalloc memory can't be passed
+          to the crypto hash routines via scatter-gather lists.  From Eric
+          Dumazet.
+    
+      19) Fix regression in promiscuous mode enabling in cdc-ether, from
+          Olivier Blin.
+    
+      20) Bucket eviction and frag entry killing can race with eachother,
+          causing an unlink of the object from the wrong list.  Fix from
+          Nikolay Aleksandrov.
+    
+      21) Missing initialization of spinlock in cxgb4 driver, from Anish
+          Bhatt.
+    
+      22) Do not cache ipv4 routing failures, otherwise if the sysctl for
+          forwarding is subsequently enabled this won't be seen.  From
+          Nicolas Cavallari"
+    
+    * git://git.kernel.org/pub/scm/linux/kernel/git/davem/net: (131 commits)
+      drivers: net: cpsw: Support ALLMULTI and fix IFF_PROMISC in switch mode
+      drivers: net: cpsw: Fix broken loop condition in switch mode
+      net: ethtool: Return -EOPNOTSUPP if user space tries to read EEPROM with lengh 0
+      stmmac: pci: set default of the filter bins
+      net: smc91x: Fix gpios for device tree based booting
+      mpls: Allow mpls_gso to be built as module
+      mpls: Fix mpls_gso handler.
+      r8152: stop submitting intr for -EPROTO
+      netfilter: nft_reject_bridge: restrict reject to prerouting and input
+      netfilter: nft_reject_bridge: don't use IP stack to reject traffic
+      netfilter: nf_reject_ipv6: split nf_send_reset6() in smaller functions
+      netfilter: nf_reject_ipv4: split nf_send_reset() in smaller functions
+      netfilter: nf_tables_bridge: update hook_mask to allow {pre,post}routing
+      drivers/net: macvtap and tun depend on INET
+      drivers/net, ipv6: Select IPv6 fragment idents for virtio UFO packets
+      drivers/net: Disable UFO through virtio
+      net: skb_fclone_busy() needs to detect orphaned skb
+      gre: Use inner mac length when computing tunnel length
+      mlx4: Avoid leaking steering rules on flow creation error flow
+      net/mlx4_en: Don't attempt to TX offload the outer UDP checksum for VXLAN
+      ...
+
+commit 61beef75cc5bae119e500c9f25daad8596c7cbe4
+Author: Anna Schumaker <Anna.Schumaker@netapp.com>
+Date:   Wed Sep 3 14:15:40 2014 -0400
+
+    NFS: Clear up state owner lock usage
+    
+    can_open_cached() reads values out of the state structure, meaning that
+    we need the so_lock to have a correct return value.  As a bonus, this
+    helps clear up some potentially confusing code.
+    
+    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+    Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
+
+commit 236c9bfa4a133cbdfeeb3f7a1902950210549634
+Author: Changbing Xiong <cb.xiong@samsung.com>
+Date:   Wed Aug 20 23:05:07 2014 -0300
+
+    [media] media: correct return value in dvb_demux_poll
+    
+    Data type of return value is unsigned int, but in function of dvb_demux_poll,
+    when the pointer of dmxdevfilter equals NULL, it will return -EINVAL, which
+    is invalid.
+    
+    Signed-off-by: Changbing Xiong <cb.xiong@samsung.com>
+    Signed-off-by: Mauro Carvalho Chehab <m.chehab@samsung.com>
+
+commit 8d68f67b57825b4287b599df1544a4df5bbdcccb
+Merge: 0ac625d 05e0127
+Author: Paolo Bonzini <pbonzini@redhat.com>
+Date:   Fri Aug 29 12:26:54 2014 +0200
+
+    Merge tag 'kvm-arm-for-v3.17-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+    
+    These fixes fix two issues in KVM for arm/arm64:
+     - hyp mode initialization issues on certian boards/bootloader combos.
+     - incorrect return address from trapped WFI/WFE instrucitons, which
+       breaks non-linux guests.
+
+commit c759606c96dc052373d4c36ea383595da46b04e9
+Merge: 2ee3945 4dac3ed
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Mon Aug 4 17:57:34 2014 +1000
+
+    Merge tag 'drm-intel-next-2014-07-25-merged' of git://anongit.freedesktop.org/drm-intel into drm-next
+    
+    Final feature pull for 3.17.
+    
+    drm-intel-next-2014-07-25:
+    - Ditch UMS support (well just the config option for now)
+    - Prep work for future platforms (Sonika Jindal, Damien)
+    - runtime pm/soix fixes (Paulo, Jesse)
+    - psr tracking improvements, locking fixes, now enabled by default!
+    - rps fixes for chv (Deepak, Ville)
+    - drm core patches for rotation support (Ville, Sagar Kamble) - the i915 parts
+      unfortunately didn't make it yet
+    - userptr fixes (Chris)
+    - minimum backlight brightness (Jani), acked long ago by Matthew Garret on irc -
+      I've forgotten about this patch :(
+    
+    QA is a bit unhappy about the DP MST stuff since it broke hpd testing a
+    bit, but otherwise looks sane. I've backmerged drm-next to resolve
+    conflicts with the mst stuff, which means the new tag itself doesn't
+    contain the overview as usual.
+    
+    * tag 'drm-intel-next-2014-07-25-merged' of git://anongit.freedesktop.org/drm-intel: (75 commits)
+      drm/i915/userptr: Keep spin_lock/unlock in the same block
+      drm/i915: Allow overlapping userptr objects
+      drm/i915: Ditch UMS config option
+      drm/i915: respect the VBT minimum backlight brightness
+      drm/i915: extract backlight minimum brightness from VBT
+      drm/i915: Replace HAS_PCH_SPLIT which incorrectly lets some platforms in
+      drm/i915: Returning from increase/decrease of pllclock when invalid
+      drm/i915: Setting legacy palette correctly for different platforms
+      drm/i915: Avoid incorrect returning for some platforms
+      drm/i915: Writing proper check for reading of pipe status reg
+      drm/i915: Returning the right VGA control reg for platforms
+      drm/i915: Allowing changing of wm latencies for valid platforms
+      drm/i915: Adding HAS_GMCH_DISPLAY macro
+      drm/i915: Fix possible overflow when recording semaphore states.
+      drm/i915: Do not unmap object unless no other VMAs reference it
+      drm/i915: remove plane/cursor/pipe assertions from intel_crtc_disable
+      drm/i915: Reorder ctx unref on ppgtt cleanup
+      drm/i915/error: Check the potential ctx obj's vm
+      drm/i915: Fix printing proper min/min/rpe values in debugfs
+      drm/i915: BDW can also detect unclaimed registers
+      ...
+
+commit f227ae9e7692b2dbb4a7d868cdcbdbfee9dffc6d
+Author: Sonika Jindal <sonika.jindal@intel.com>
+Date:   Mon Jul 21 15:23:45 2014 +0530
+
+    drm/i915: Avoid incorrect returning for some platforms
+    
+    Signed-off-by: Sonika Jindal <sonika.jindal@intel.com>
+    Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+commit 98abaf1370c932db38a23b270f86689b66b34cdf
+Merge: 12af701 3ed66ec
+Author: Olof Johansson <olof@lixom.net>
+Date:   Mon Jul 7 22:07:14 2014 -0700
+
+    Merge tag 'renesas-soc-for-v3.17' of git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas into next/soc
+    
+    Merge "Renesas ARM Based SoC Updates for v3.17" from Simon Horman:
+    
+    - Use shmobile_init_late on r8a7791 and r8a7790 whien booting using DT-only
+    - Support Core-Standby for Suspend to RAM on r8a7791 and r8a7790 SoCs
+    - Shared CMA reservation for R-Car Gen2 SoCs
+    - Add r8a7791 SYSC power management support
+    
+    * tag 'renesas-soc-for-v3.17' of git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas:
+      ARM: shmobile: Remove ARCH_HAS_CPUFREQ config for shmobile
+      ARM: shmobile: rcar-gen2: update call to dma_contiguous_reserve_area
+      ARM: shmobile: rcar-gen2: correct return value of shmobile_smp_apmu_suspend_init
+      ARM: shmobile: rcar-gen2: Remove useless copied section for LongTrail
+      ARM: shmobile: rcar-gen2: Use "1ULL" instead of "(u64)1"
+      ARM: shmobile: rcar-gen2: Update for of_get_flat_dt_prop() update
+      ARM: shmobile: Add shared R-Car Gen2 CMA reservation code
+      ARM: shmobile: Use shmobile_init_late() on r8a7791 DT-only
+      ARM: shmobile: Use shmobile_init_late() on r8a7790 DT-only
+      ARM: shmobile: Mark all SoCs in shmobile as CPUFreq, capable
+      ARM: shmobile: r8a7791: Support Core-Standby for Suspend to RAM
+      ARM: shmobile: r8a7790: Support Core-Standby for Suspend to RAM
+      ARM: shmobile: APMU: Add Core-Standby-state for Suspend to RAM
+      ARM: shmobile: r8a7791 SYSC setup code
+    
+    Signed-off-by: Olof Johansson <olof@lixom.net>
+
+commit d51193d4ae181df37e9196a54b1fe3360ca920f2
+Author: Jahnavi Meher <jahnavi.meher@gmail.com>
+Date:   Wed Jun 25 15:48:15 2014 +0530
+
+    rsi: Fixed warnings reported by static code analyzers.
+    
+    Fixed a warning related to incorrect return type and removed an
+    unnecessary semi colon.
+    
+    Signed-off-by: Jahnavi Meher <jahnavi.meher@gmail.com>
+    Signed-off-by: John W. Linville <linville@tuxdriver.com>
+
+commit 7c0e0636753ed98941eb4f904a03b2c6b5e5614d
+Author: Jes Sorensen <Jes.Sorensen@redhat.com>
+Date:   Mon Jun 9 15:16:37 2014 +0200
+
+    staging: rtl8723au: cfg80211_rtw_connect(): Check correct return value from rtw_set_802_11_ssid23a()
+    
+    Signed-off-by: Jes Sorensen <Jes.Sorensen@redhat.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit ecdaca48629bd99609fdc612685363330967dce2
+Author: Simon Horman <horms+renesas@verge.net.au>
+Date:   Mon Jun 16 20:21:13 2014 +0900
+
+    ARM: shmobile: rcar-gen2: correct return value of shmobile_smp_apmu_suspend_init
+    
+    The dummy shmobile_smp_apmu_suspend_init() function provided when
+    CPU_IDLE is not set should not return a value as per the signature
+    of the function.
+    
+    This problem appears to have been introduced by
+    867ba81f728f1daa ("ARM: shmobile: APMU: Add Core-Standby-state for Suspend
+    to RAM").
+    
+    Cc: Keita Kobayashi <keita.kobayashi.ym@renesas.com>
+    Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+commit 24644035d52a9da2af319dd05b1a580a0a7069a0
+Author: Sakari Ailus <sakari.ailus@iki.fi>
+Date:   Sat May 3 21:31:57 2014 -0300
+
+    [media] smiapp: Return correct return value in smiapp_registered()
+    
+    Prepare for supporting systems using the Device tree. Should the resources
+    not be available at the time of driver probe(), the EPROBE_DEFER error code
+    must be also returned from its probe function.
+    
+    Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+    Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+    Signed-off-by: Mauro Carvalho Chehab <m.chehab@samsung.com>
+
+commit 9c4f8d92c23de47db080d1a33addea30751f6122
+Author: Vikas Chaudhary <vikas.chaudhary@qlogic.com>
+Date:   Mon Feb 24 22:07:02 2014 -0500
+
+    qla4xxx: Check for correct return status
+    
+    Check for correct return status in function -
+    qla4_8xxx_minidump_pex_dma_read
+    
+    Signed-off-by: Vikas Chaudhary <vikas.chaudhary@qlogic.com>
+    Reviewed-by: Mike Christie <michaelc@cs.wisc.edu>
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+commit c4cf6dfb8e204508ed8d066f08a523e7b8384ae8
+Author: Malcolm Priestley <tvboxspy@gmail.com>
+Date:   Tue Mar 18 19:25:04 2014 +0000
+
+    staging: vt6656: rxtx endian correct return duration
+    
+    All duration base types are __le16 correct back to cpu
+    
+    Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit 9a78bc83b4c31f67202b7b0a77fa25da732f44a3
+Author: Christian Riesch <christian.riesch@omicron.at>
+Date:   Thu Mar 6 12:42:37 2014 +0100
+
+    mtd: Fix the behavior of OTP write if there is not enough room for data
+    
+    If a write to one time programmable memory (OTP) hits the end of this
+    memory area, no more data can be written. The count variable in
+    mtdchar_write() in drivers/mtd/mtdchar.c is not decreased anymore.
+    We are trapped in the loop forever, mtdchar_write() will never return
+    in this case.
+    
+    The desired behavior of a write in such a case is described in [1]:
+    - Try to write as much data as possible, truncate the write to fit into
+      the available memory and return the number of bytes that actually
+      have been written.
+    - If no data could be written at all, return -ENOSPC.
+    
+    This patch fixes the behavior of OTP write if there is not enough space
+    for all data:
+    
+    1) mtd_write_user_prot_reg() in drivers/mtd/mtdcore.c is modified to
+       return -ENOSPC if no data could be written at all.
+    2) mtdchar_write() is modified to handle -ENOSPC correctly. Exit if a
+       write returned -ENOSPC and yield the correct return value, either
+       then number of bytes that could be written, or -ENOSPC, if no data
+       could be written at all.
+    
+    Furthermore the patch harmonizes the behavior of the OTP memory write
+    in drivers/mtd/devices/mtd_dataflash.c with the other implementations
+    and the requirements from [1]. Instead of returning -EINVAL if the data
+    does not fit into the OTP memory, we try to write as much data as
+    possible/truncate the write.
+    
+    [1] http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html
+    
+    Signed-off-by: Christian Riesch <christian.riesch@omicron.at>
+    Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+
+commit d5298dffebae76810a6a942bc6467f893bc11eee
+Author: Oliver Hartkopp <socketcan@hartkopp.net>
+Date:   Fri Feb 28 16:36:21 2014 +0100
+
+    can: move sanity check for bitrate and tq into can_get_bittiming
+    
+    This patch moves a sanity check in order to have a second user for CAN FD.
+    Also simplify the return value generation in can_get_bittiming() as only
+    correct return values of can_[calc|fixup]_bittiming() lead to a return value of
+    zero.
+    
+    Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+    Acked-by: Stephane Grosjean <s.grosjean@peak-system.com>
+    Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+
+commit d3ec67c0e23f86fa1ec9d1d80b6e5d9dc48eb3c4
+Merge: ffd5939 ff95fe3
+Author: David S. Miller <davem@davemloft.net>
+Date:   Tue Feb 18 16:57:42 2014 -0500
+
+    Merge branch 'for-davem' of git://git.kernel.org/pub/scm/linux/kernel/git/linville/wireless
+    
+    John W. Linville says:
+    
+    ====================
+    Please pull this batch of fixes intended for the 3.14 stream...
+    
+    For the iwlwifi one, Emmanuel says:
+    
+    "As explicitly written in the commit message, we prefer to disable Tx
+    AMPDU on NICs supported by iwldvm. This feature gives a big boost in
+    Tx performance, but the firmware is buggy and we can't rely on it.
+    Our hope is that most of the users out there want wifi to surf on
+    the web which means that they care more for Rx traffic than for Tx.
+    People who want to enable it can do so with the help of a module
+    parameter."
+    
+    On top of that...
+    
+    Dan Carpenter fixes a typo/thinko in ath5k.
+    
+    Olivier Langlois fixes a couple of rtlwifi issues, one which leaves
+    IRQs disabled too long (causing a variety of problems elsewhere),
+    and one which fixes an incorrect return code when failing to enable
+    the NIC.
+    
+    Russell King fixes a NULL pointer dereference in hostap.
+    
+    Stanislaw Gruszka fixes a DMA coherence issue in the rtl8187 driver.
+    
+    Please let me know if there are problems!
+    ====================
+    
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 2e8c5e56b307271c2dab6f8bfd1d8a3822ca2390
+Author: Olivier Langlois <olivier@trillion01.com>
+Date:   Sat Feb 1 01:11:10 2014 -0500
+
+    rtlwifi: Fix incorrect return from rtl_ps_enable_nic()
+    
+    rtl_ps_enable_nic() is called from loops that will loop until this function returns true or a
+    maximum number of retries is performed.
+    
+    hw_init() returns non-zero on error. In that situation return false to
+    restore the original design intent to retry hw init when it fails.
+    
+    Signed-off-by: Olivier Langlois <olivier@trillion01.com>
+    Cc: Stable <stable@vger.kernel.org>
+    Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+    Signed-off-by: John W. Linville <linville@tuxdriver.com>
+
+commit dea054fc7f35d4664000b1e684713a83c2bd0888
+Merge: 7df4d0c a3485d0
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Feb 12 09:12:04 2014 -0800
+
+    Merge tag 'gpio-v3.14-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
+    
+    Pull GPIO fixes from Linus Walleij:
+     "Here are some accumulated patches with small fixes for this and that
+      in a few GPIO drivers, and a more important fix to an #ifdef in the
+      GPIO consumer header.
+    
+      Summary:
+    
+       - Get #ifdef's right in the <linux/gpio/consumer.h> header.
+    
+       - Minor fixes to tb10x, clps711x, bcm281xx, intel-mid and xtensa GPIO
+         drivers"
+    
+    * tag 'gpio-v3.14-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio:
+      gpio: consumer.h: Move forward declarations outside #ifdef
+      gpio: tb10x: GPIO_TB10X needs to select GENERIC_IRQ_CHIP
+      gpio: clps711x: Add module alias to support module auto loading
+      gpio: bcm281xx: Update MODULE_AUTHOR
+      gpio: intel-mid: fix the incorrect return of idle callback
+      gpio: xtensa: fix build when XCHAL_HAVE_CP is 0
+
+commit 6b0afc2a21726b2d6b6aa441af40cafaf5405cc8
+Author: Tejun Heo <tj@kernel.org>
+Date:   Mon Feb 3 14:03:01 2014 -0500
+
+    kernfs, sysfs, driver-core: implement kernfs_remove_self() and its wrappers
+    
+    Sometimes it's necessary to implement a node which wants to delete
+    nodes including itself.  This isn't straightforward because of kernfs
+    active reference.  While a file operation is in progress, an active
+    reference is held and kernfs_remove() waits for all such references to
+    drain before completing.  For a self-deleting node, this is a deadlock
+    as kernfs_remove() ends up waiting for an active reference that itself
+    is sitting on top of.
+    
+    This currently is worked around in the sysfs layer using
+    sysfs_schedule_callback() which makes such removals asynchronous.
+    While it works, it's rather cumbersome and inherently breaks
+    synchronicity of the operation - the file operation which triggered
+    the operation may complete before the removal is finished (or even
+    started) and the removal may fail asynchronously.  If a removal
+    operation is immmediately followed by another operation which expects
+    the specific name to be available (e.g. removal followed by rename
+    onto the same name), there's no way to make the latter operation
+    reliable.
+    
+    The thing is there's no inherent reason for this to be asynchrnous.
+    All that's necessary to do this synchronous is a dedicated operation
+    which drops its own active ref and deactivates self.  This patch
+    implements kernfs_remove_self() and its wrappers in sysfs and driver
+    core.  kernfs_remove_self() is to be called from one of the file
+    operations, drops the active ref the task is holding, removes the self
+    node, and restores active ref to the dead node so that the ref is
+    balanced afterwards.  __kernfs_remove() is updated so that it takes an
+    early exit if the target node is already fully removed so that the
+    active ref restored by kernfs_remove_self() after removal doesn't
+    confuse the deactivation path.
+    
+    This makes implementing self-deleting nodes very easy.  The normal
+    removal path doesn't even need to be changed to use
+    kernfs_remove_self() for the self-deleting node.  The method can
+    invoke kernfs_remove_self() on itself before proceeding the normal
+    removal path.  kernfs_remove() invoked on the node by the normal
+    deletion path will simply be ignored.
+    
+    This will replace sysfs_schedule_callback().  A subtle feature of
+    sysfs_schedule_callback() is that it collapses multiple invocations -
+    even if multiple removals are triggered, the removal callback is run
+    only once.  An equivalent effect can be achieved by testing the return
+    value of kernfs_remove_self() - only the one which gets %true return
+    value should proceed with actual deletion.  All other instances of
+    kernfs_remove_self() will wait till the enclosing kernfs operation
+    which invoked the winning instance of kernfs_remove_self() finishes
+    and then return %false.  This trivially makes all users of
+    kernfs_remove_self() automatically show correct synchronous behavior
+    even when there are multiple concurrent operations - all "echo 1 >
+    delete" instances will finish only after the whole operation is
+    completed by one of the instances.
+    
+    Note that manipulation of active ref is implemented in separate public
+    functions - kernfs_[un]break_active_protection().
+    kernfs_remove_self() is the only user at the moment but this will be
+    used to cater to more complex cases.
+    
+    v2: For !CONFIG_SYSFS, dummy version kernfs_remove_self() was missing
+        and sysfs_remove_file_self() had incorrect return type.  Fix it.
+        Reported by kbuild test bot.
+    
+    v3: kernfs_[un]break_active_protection() separated out from
+        kernfs_remove_self() and exposed as public API.
+    
+    Signed-off-by: Tejun Heo <tj@kernel.org>
+    Cc: Alan Stern <stern@rowland.harvard.edu>
+    Cc: kbuild test robot <fengguang.wu@intel.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit 84a34575fe7c87278e4e00f016aa5b624dcb9171
+Author: xinhui.pan <xinhuiX.pan@intel.com>
+Date:   Fri Jan 31 13:08:01 2014 -0800
+
+    gpio: intel-mid: fix the incorrect return of idle callback
+    
+    intel_gpio_runtime_idle should return correct error code if it do fail.
+    make it more correct even though -EBUSY is the most possible return value.
+    
+    Signed-off-by: bo.he <bo.he@intel.com>
+    Signed-off-by: xinhui.pan <xinhuiX.pan@intel.com>
+    Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
+    Reviewed-by: Felipe Balbi <balbi@ti.com>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+commit 1ae06819c77cff1ea2833c94f8c093fe8a5c79db
+Author: Tejun Heo <tj@kernel.org>
+Date:   Fri Jan 10 08:57:27 2014 -0500
+
+    kernfs, sysfs, driver-core: implement kernfs_remove_self() and its wrappers
+    
+    Sometimes it's necessary to implement a node which wants to delete
+    nodes including itself.  This isn't straightforward because of kernfs
+    active reference.  While a file operation is in progress, an active
+    reference is held and kernfs_remove() waits for all such references to
+    drain before completing.  For a self-deleting node, this is a deadlock
+    as kernfs_remove() ends up waiting for an active reference that itself
+    is sitting on top of.
+    
+    This currently is worked around in the sysfs layer using
+    sysfs_schedule_callback() which makes such removals asynchronous.
+    While it works, it's rather cumbersome and inherently breaks
+    synchronicity of the operation - the file operation which triggered
+    the operation may complete before the removal is finished (or even
+    started) and the removal may fail asynchronously.  If a removal
+    operation is immmediately followed by another operation which expects
+    the specific name to be available (e.g. removal followed by rename
+    onto the same name), there's no way to make the latter operation
+    reliable.
+    
+    The thing is there's no inherent reason for this to be asynchrnous.
+    All that's necessary to do this synchronous is a dedicated operation
+    which drops its own active ref and deactivates self.  This patch
+    implements kernfs_remove_self() and its wrappers in sysfs and driver
+    core.  kernfs_remove_self() is to be called from one of the file
+    operations, drops the active ref and deactivates using
+    __kernfs_deactivate_self(), removes the self node, and restores active
+    ref to the dead node using __kernfs_reactivate_self() so that the ref
+    is balanced afterwards.  __kernfs_remove() is updated so that it takes
+    an early exit if the target node is already fully removed so that the
+    active ref restored by kernfs_remove_self() after removal doesn't
+    confuse the deactivation path.
+    
+    This makes implementing self-deleting nodes very easy.  The normal
+    removal path doesn't even need to be changed to use
+    kernfs_remove_self() for the self-deleting node.  The method can
+    invoke kernfs_remove_self() on itself before proceeding the normal
+    removal path.  kernfs_remove() invoked on the node by the normal
+    deletion path will simply be ignored.
+    
+    This will replace sysfs_schedule_callback().  A subtle feature of
+    sysfs_schedule_callback() is that it collapses multiple invocations -
+    even if multiple removals are triggered, the removal callback is run
+    only once.  An equivalent effect can be achieved by testing the return
+    value of kernfs_remove_self() - only the one which gets %true return
+    value should proceed with actual deletion.  All other instances of
+    kernfs_remove_self() will wait till the enclosing kernfs operation
+    which invoked the winning instance of kernfs_remove_self() finishes
+    and then return %false.  This trivially makes all users of
+    kernfs_remove_self() automatically show correct synchronous behavior
+    even when there are multiple concurrent operations - all "echo 1 >
+    delete" instances will finish only after the whole operation is
+    completed by one of the instances.
+    
+    v2: For !CONFIG_SYSFS, dummy version kernfs_remove_self() was missing
+        and sysfs_remove_file_self() had incorrect return type.  Fix it.
+        Reported by kbuild test bot.
+    
+    v3: Updated to use __kernfs_{de|re}activate_self().
+    
+    Signed-off-by: Tejun Heo <tj@kernel.org>
+    Cc: Alan Stern <stern@rowland.harvard.edu>
+    Cc: kbuild test robot <fengguang.wu@intel.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+commit 84b1667dea233d2af29b5138bfd2d70417cfa720
+Author: Jiang Liu <jiang.liu@linux.intel.com>
+Date:   Thu Dec 19 20:38:17 2013 +0800
+
+    ACPI / TPM: replace open-coded _DSM code with helper functions
+    
+    Use helper functions to simplify _DSM related code in TPM driver.
+    
+    This patch also help to get rid of following warning messages:
+    [  163.509575] ACPI Error: Incorrect return type [Buffer] requested [Package]
+    (20130517/nsxfeval-135)
+    
+    But there is still an warning left.
+    [  181.637366] ACPI Warning: \_SB_.IIO0.LPC0.TPM_._DSM: Argument #4 type
+    mismatch - Found [Buffer], ACPI requires [Package] (20130517/nsarguments-95)
+    
+    Signed-off-by: Jiang Liu <jiang.liu@linux.intel.com>
+    Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+commit 727ebd544f85285a223ecc6a2a57ef90202cdc7b
+Author: Jiri Olsa <jolsa@redhat.com>
+Date:   Thu Nov 28 11:30:14 2013 +0100
+
+    perf tools: Use correct return type for readn function
+    
+    Changing readn function return type to ssize_t because read returns
+    ssize_t not int.
+    
+    Changing callers holding variable types as well.
+    
+    Signed-off-by: Jiri Olsa <jolsa@redhat.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: David Ahern <dsahern@gmail.com>
+    Cc: Frederic Weisbecker <fweisbec@gmail.com>
+    Cc: Ingo Molnar <mingo@kernel.org>
+    Cc: Mike Galbraith <efault@gmx.de>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Link: http://lkml.kernel.org/r/1385634619-8129-3-git-send-email-jolsa@redhat.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+commit ffa1cb967f650b6ce5eace09ee9b1ae7c4015d18
+Author: Dmitry Kravkov <dmitry@broadcom.com>
+Date:   Sun Nov 17 08:59:28 2013 +0200
+
+    bnx2x: prevent CFC attention
+    
+    During VF load, prior to sending messages on HW channel to PF the VF
+    checks its bulletin board to see whether the PF indicated it has closed;
+    If a closed PF is encountered, the VF skips sending the message.
+    
+    Due to incorrect return values, there's a possible scenario in which the VF
+    finishes loading "successfully", while the PF hasn't actually fully configured
+    FW/HW for the VFs supposed configuration.
+    Once VF tries to send Tx packets, HW will raise an attention (and FW possibly
+    will start treat the VF as malicious).
+    
+    The patch fails the loading process in such a scenario.
+    
+    Signed-off-by: Dmitry Kravkov <dmitry@broadcom.com>
+    Signed-off-by: Yuval Mintz <yuvalmin@broadcom.com>
+    Signed-off-by: Ariel Elior <ariele@broadcom.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit fcd7476f9e03a36e709e0807198d47a826cc4e3a
+Merge: d320e20 d969135
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Nov 14 16:56:32 2013 +0900
+
+    Merge branch 'perf-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+    
+    Pull perf updates from Ingo Molnar:
+     "A number of fixes:
+    
+       - Fix segfault on perf trace -i perf.data, from Namhyung Kim.
+    
+       - Fix segfault with --no-mmap-pages, from David Ahern.
+    
+       - Don't force a refresh during progress update in the TUI, greatly
+         reducing startup costs, fix from Patrick Palka.
+    
+       - Fix sw clock event period test wrt not checking if using >
+         max_sample_freq.
+    
+       - Handle throttle events in 'object code reading' test, fix from
+         Adrian Hunter.
+    
+       - Prevent condition that all sort keys are elided, fix from Namhyung
+         Kim.
+    
+       - Round mmap pages to power 2, from David Ahern.
+    
+      And a number of late arrival changes:
+    
+       - Add summary only option to 'perf trace', suppressing the decoding
+         of events, from David Ahern
+    
+       - 'perf trace --summary' formatting simplifications, from Pekka
+         Enberg.
+    
+       - Beautify fifth argument of mmap() as fd, in 'perf trace', from
+         Namhyung Kim.
+    
+       - Add direct access to dynamic arrays in libtraceevent, from Steven
+         Rostedt.
+    
+       - Synthesize non-exec MMAP records when --data used, allowing the
+         resolution of data addresses to symbols (global variables, etc), by
+         Arnaldo Carvalho de Melo.
+    
+       - Code cleanups by David Ahern and Adrian Hunter"
+    
+    * 'perf-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip: (23 commits)
+      tools lib traceevent: Add direct access to dynamic arrays
+      perf target: Shorten perf_target__ to target__
+      perf tests: Handle throttle events in 'object code reading' test
+      perf evlist: Refactor mmap_pages parsing
+      perf evlist: Round mmap pages to power 2 - v2
+      perf record: Fix segfault with --no-mmap-pages
+      perf trace: Add summary only option
+      perf trace: Simplify '--summary' output
+      perf trace: Change syscall summary duration order
+      perf tests: Compensate lower sample freq with longer test loop
+      perf trace: Fix segfault on perf trace -i perf.data
+      perf trace: Separate tp syscall field caching into init routine to be reused
+      perf trace: Beautify fifth argument of mmap() as fd
+      perf tests: Use lower sample_freq in sw clock event period test
+      perf tests: Check return of perf_evlist__open sw clock event period test
+      perf record: Move existing write_output into helper function
+      perf record: Use correct return type for write()
+      perf tools: Prevent condition that all sort keys are elided
+      perf machine: Simplify synthesize_threads method
+      perf machine: Introduce synthesize_threads method out of open coded equivalent
+      ...
+
+commit 410f17860318f36b999a90138f50350e3dc49933
+Author: Adrian Hunter <adrian.hunter@intel.com>
+Date:   Fri Nov 8 12:27:50 2013 +0200
+
+    perf record: Use correct return type for write()
+    
+    write() returns a 'ssize_t' not an 'int'.
+    
+    Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: David Ahern <dsahern@gmail.com>
+    Cc: Frederic Weisbecker <fweisbec@gmail.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jiri Olsa <jolsa@redhat.com>
+    Cc: Mike Galbraith <efault@gmx.de>
+    Cc: Namhyung Kim <namhyung@gmail.com>
+    Cc: Paul Mackerras <paulus@samba.org>
+    Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+    Cc: Stephane Eranian <eranian@google.com>
+    Link: http://lkml.kernel.org/r/1383906470-21002-1-git-send-email-adrian.hunter@intel.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+commit 636c0371a737c27510df867161fb8100c2f086bd
+Author: Ying Xue <ying.xue@windriver.com>
+Date:   Fri Oct 18 07:23:20 2013 +0200
+
+    tipc: correct return value of link_cmd_set_value routine
+    
+    link_cmd_set_value() takes commands for link, bearer and media related
+    configuration. Genereally the function returns 0 when a command is
+    recognized, and -EINVAL when it is not. However, in the switch for link
+    related commands it returns 0 even when the command is unrecognized. This
+    will sometimes make it look as if a failed configuration command has been
+    successful, but has otherwise no negative effects.
+    
+    We remove this anomaly by returning -EINVAL even for link commands. We also
+    rework all three switches to make them  conforming to common kernel coding
+    style.
+    
+    Signed-off-by: Ying Xue <ying.xue@windriver.com>
+    Reviewed-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+    Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit 679815834857d5305dae108a03addccf16d86868
+Author: Ying Xue <ying.xue@windriver.com>
+Date:   Fri Oct 18 07:23:19 2013 +0200
+
+    tipc: correct return value of recv_msg routine
+    
+    Currently, rcv_msg() always returns zero on a packet delivery upcall
+    from net_device.
+    
+    To make its behavior more compliant with the way this API should be
+    used, we change this to let it return NET_RX_SUCCESS (which is zero
+    anyway) when it is able to handle the packet, and NET_RX_DROP otherwise.
+    The latter does not imply any functional change, it only enables the
+    driver to keep more accurate statistics about the fate of delivered
+    packets.
+    
+    Signed-off-by: Ying Xue <ying.xue@windriver.com>
+    Reviewed-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+    Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit cbf031f425fd0b30ff10ba83b612753189a6bbbf
+Author: Nicholas Bellinger <nab@daterainc.com>
+Date:   Tue Aug 20 15:38:55 2013 -0700
+
+    target: Add support for EXTENDED_COPY copy offload emulation
+    
+    This patch adds support for EXTENDED_COPY emulation from SPC-3, that
+    enables full copy offload target support within both a single virtual
+    backend device, and across multiple virtual backend devices.  It also
+    functions independent of target fabric, and supports copy offload
+    across multiple target fabric ports.
+    
+    This implemenation supports both EXTENDED_COPY PUSH and PULL models
+    of operation, so the actual CDB may be received on either source or
+    desination logical unit.
+    
+    For Target Descriptors, it currently supports the NAA IEEE Registered
+    Extended designator (type 0xe4), which allows the reference of target
+    ports to occur independent of fabric type using EVPD 0x83 WWNs.
+    
+    For Segment Descriptors, it currently supports copy from block to
+    block (0x02) mode.
+    
+    It also honors any present SCSI reservations of the destination target
+    port.  Note that only Supports No List Identifier (SNLID=1) mode is
+    supported.
+    
+    Also included is basic RECEIVE_COPY_RESULTS with service action type
+    OPERATING PARAMETERS (0x03) required for SNLID=1 operation.
+    
+    v3 changes:
+      - Fix incorrect return type in target_do_receive_copy_results()
+        (Fengguang)
+    
+    v2 changes:
+      - Use target_alloc_sgl() instead of transport_generic_get_mem()
+      - Convert debug output to use pr_debug()
+      - Convert target_xcopy_parse_target_descriptors() NAA IEEN WWN
+        dump to use 0x%16phN format specification
+      - Drop unnecessary xcopy_pt_cmd->xpt_passthrough_wsem, and
+        associated usage in xcopy_pt_write_pending() and
+        target_xcopy_issue_pt_cmd()
+      - Add check for unsupported EXTENDED_COPY(LID4) service action
+        bits in target_do_xcopy()
+    
+    Cc: Christoph Hellwig <hch@lst.de>
+    Cc: Hannes Reinecke <hare@suse.de>
+    Cc: Martin Petersen <martin.petersen@oracle.com>
+    Cc: Chris Mason <chris.mason@fusionio.com>
+    Cc: Roland Dreier <roland@purestorage.com>
+    Cc: Zach Brown <zab@redhat.com>
+    Cc: James Bottomley <JBottomley@Parallels.com>
+    Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+    Signed-off-by: Nicholas Bellinger <nab@daterainc.com>
+
+commit 1205e1fa615805c9efa97303b552cf445965752a
+Author: Phil Oester <kernel@linuxace.com>
+Date:   Sun Sep 1 08:32:21 2013 -0700
+
+    netfilter: xt_TCPMSS: correct return value in tcpmss_mangle_packet
+    
+    In commit b396966c4 (netfilter: xt_TCPMSS: Fix missing fragmentation handling),
+    I attempted to add safe fragment handling to xt_TCPMSS.  However, Andy Padavan
+    of Project N56U correctly points out that returning XT_CONTINUE in this
+    function does not work.  The callers (tcpmss_tg[46]) expect to receive a value
+    of 0 in order to return XT_CONTINUE.
+    
+    Signed-off-by: Phil Oester <kernel@linuxace.com>
+    Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+
+commit 57103d7fe1833857cf542a482c1eb8da0bf86e5d
+Author: Jingoo Han <jg1.han@samsung.com>
+Date:   Fri Jul 19 16:22:19 2013 +0900
+
+    target: replace strict_strto*() with kstrto*()
+    
+    The usage of strict_strtoul() and strict_strtoull() is not preferred,
+    because strict_strtoul() and strict_strtoull() are obsolete. Thus,
+    kstrtoul() and kstrtoull() should be used.
+    
+    v2: Fix incorrect return in ft_add_tpg (Fengguang)
+    
+    Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+    Signed-off-by: Nicholas Bellinger <nab@linux-iscsi.org>
+
+commit fdafa7cf97a3c4c1d731600b94241cb9cea40fc8
+Merge: 79a6fb1 93d783b
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Aug 9 15:06:17 2013 -0700
+
+    Merge tag 'hwmon-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging
+    
+    Pull hwmon fix from Guenter Roeck:
+     "Fix bug in adt7470 driver which causes it to fail writing fan speed
+      limits"
+    
+    * tag 'hwmon-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging:
+      hwmon: (adt7470) Fix incorrect return code check
+
+commit 93d783bcca69bfacc8dc739d8a050498402587b5
+Author: Curt Brune <curt@cumulusnetworks.com>
+Date:   Thu Aug 8 12:11:03 2013 -0700
+
+    hwmon: (adt7470) Fix incorrect return code check
+    
+    In adt7470_write_word_data(), which writes two bytes using
+    i2c_smbus_write_byte_data(), the return codes are incorrectly AND-ed
+    together when they should be OR-ed together.
+    
+    The return code of i2c_smbus_write_byte_data() is zero for success.
+    
+    The upshot is only the first byte was ever written to the hardware.
+    The 2nd byte was never written out.
+    
+    I noticed that trying to set the fan speed limits was not working
+    correctly on my system.  Setting the fan speed limits is the only
+    code that uses adt7470_write_word_data().  After making the change
+    the limit settings work and the alarms work also.
+    
+    Signed-off-by: Curt Brune <curt@cumulusnetworks.com>
+    Cc: stable@vger.kernel.org
+    Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+
+commit 0e97456ab5ba2761892d9e67b7e3b0cac262141c
+Merge: 76d3f4c 980f3a7
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Jul 3 11:11:23 2013 -0700
+
+    Merge branch 'for-3.11' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k
+    
+    Pull m68k updates from Geert Uytterhoeven.
+    
+    * 'for-3.11' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k:
+      m68k/q40: Enable PC parallel port in defconfig
+      m68k/q40: Undefine insl/outsl before redefining them
+      m68k/uaccess: Fix asm constraints for userspace access
+      swim: Release memory region after incorrect return/goto
+      m68k/irq: Vector ints need a valid interrupt handler
+      m68k/math-emu: unsigned issue, 'unsigned long' will never be less than zero
+      m68k: remove CONFIG_EARLY_PRINTK dependency on CONFIG_EMBEDDED, default to n
+      m68k/sun3: remove inline marking of EXPORT_SYMBOL functions
+      [SCSI] a3000: use module_platform_driver_probe()
+      [SCSI] a4000t: use module_platform_driver_probe()
+      m68k: Remove inline strcpy() and strcat() implementations
+
+commit 957d6bf665462eb1e94f7c23b4bdf20a83fea4b2
+Author: Joe Perches <joe@perches.com>
+Date:   Tue Jun 4 11:34:35 2013 -0700
+
+    swim: Release memory region after incorrect return/goto
+    
+    The code uses
+    
+    	return foo;
+    	goto err_type;
+    
+    when instead the form should have been
+    
+    	ret = foo;
+    	goto err_type;
+    
+    Here this causes a useful release_mem_region to be skipped.
+    
+    Signed-off-by: Joe Perches <joe@perches.com>
+    Reviewed-by: Laurent Vivier <Laurent@Vivier.EU>
+    Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+commit e2b02e25c5e9c2b5c8da22d8ca7efadc1b4e5468
+Merge: 3b285cb 1f89b8f
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Jun 6 16:34:11 2013 -0700
+
+    Merge tag 'staging-3.10-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+    
+    Pull staging driver fixes from Greg Kroah-Hartman:
+     "Here are some staging and IIO driver fixes for the 3.10-rc5 release.
+    
+      All of them are tiny, and fix a number of reported issues (build and
+      runtime)"
+    
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    
+    * tag 'staging-3.10-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging:
+      iio:inkern: Fix typo/bug in convert raw to processed.
+      iio: frequency: ad4350: Fix bug / typo in mask
+      inkern: iio_device_put after incorrect return/goto
+      staging: alarm-dev: information leak in alarm_compat_ioctl()
+      iio:callback buffer: free the scan_mask
+      staging: alarm-dev: information leak in alarm_ioctl()
+      drivers: staging: zcache: fix compile error
+      staging: dwc2: fix value of dma_mask
+
+commit e916b80d2b1988e985abc0a1c85eca5b96c61f48
+Author: Joe Perches <joe@perches.com>
+Date:   Tue Jun 4 15:44:00 2013 +0100
+
+    inkern: iio_device_put after incorrect return/goto
+    
+    The code uses
+    
+        return foo;
+        goto err_type;
+    
+    when instead the form should have been
+    
+        ret = foo;
+        goto err_type;
+    
+    Here this causes a useful iio_device_put to be skipped.
+    
+    Signed-off-by: Joe Perches <joe@perches.com>
+    Signed-off-by: Jonathan Cameron <jic23@kernel.org>
+
+commit ad819039f1aa5c5179ecdfb035ed2864d93e741e
+Author: Sachin Kamat <sachin.kamat@linaro.org>
+Date:   Mon Apr 29 16:20:12 2013 -0700
+
+    drivers/rtc/rtc-max77686.c: fix incorrect return value on error
+    
+    'ret' was not initialized to error code before returning. While
+    at it also remove some redundant code and cleanup.
+    
+    Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+    Cc: Chiwoong Byun <woong.byun@samsung.com>
+    Cc: Jonghwa Lee <jonghwa3.lee@samsung.com>
+    Cc: Laxman dewangan <ldewangan@nvidia.com>
+    Cc: Venu Byravarasu <vbyravarasu@nvidia.com>
+    Cc: Jingoo Han <jg1.han@samsung.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit 406dc00407edfa75c97123c7f8653e850358fb72
+Author: Sachin Kamat <sachin.kamat@linaro.org>
+Date:   Mon Apr 29 16:20:11 2013 -0700
+
+    drivers/rtc/rtc-max8997.c: fix incorrect return value on error
+    
+    'ret' was being returned without initializing it to error code.  While at
+    it also remove duplicate return statement.
+    
+    Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+    Cc: Jonghwa Lee <jonghwa3.lee@samsung.com>
+    Cc: Chiwoong Byun <woong.byun@samsung.com>
+    Cc: Laxman dewangan <ldewangan@nvidia.com>
+    Cc: Venu Byravarasu <vbyravarasu@nvidia.com>
+    Cc: Jingoo Han <jg1.han@samsung.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit dbda161be8ae43133bbeac34da3ad99ffeb63556
+Author: Sachin Kamat <sachin.kamat@linaro.org>
+Date:   Mon Apr 29 16:20:10 2013 -0700
+
+    drivers/rtc/rtc-tps65910.c: fix incorrect return value on error
+    
+    'ret' was not initialized to correct error value before returning.
+    Since 'irq' is also being tested for 0, we cannot return irq itself as
+    it means function is success even though we are returning before
+    completing the probe.
+    
+    Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+    Acked-by: Venu Byravarasu <vbyravarasu@nvidia.com>
+    Cc: Chiwoong Byun <woong.byun@samsung.com>
+    Cc: Jonghwa Lee <jonghwa3.lee@samsung.com>
+    Cc: Laxman dewangan <ldewangan@nvidia.com>
+    Cc: Jingoo Han <jg1.han@samsung.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit 83c15f4c05757b3c5fe1551a474458fd16d27bae
+Merge: d6e911b 918d7f6
+Author: Olof Johansson <olof@lixom.net>
+Date:   Thu Apr 11 03:38:03 2013 -0700
+
+    Merge branch 'depends/clk-for-3.10' into next/cleanup
+    
+    Bringin in clk subsystem dependencies needed by sunxi.
+    
+    * depends/clk-for-3.10: (26 commits)
+      clk: sunxi: drop an unnecesary kmalloc
+      clk: sunxi: drop CLK_IGNORE_UNUSED
+      clk: sunxi: Add support for AXI, AHB, APB0 and APB1 gates
+      clk: divider: Introduce CLK_DIVIDER_ALLOW_ZERO flag
+      clk: mvebu: Use common of_clk_init() function
+      clk: fix clk_mux::flags kerneldoc
+      clk: allow reentrant calls into the clk framework
+      clk: abstract locking out into helper functions
+      clk: zynq: Add missing zynq clk header
+      clk: sunxi: rename compatible strings
+      arm: sunxi: Add useful information about sunxi clocks
+      clk: arm: sunxi: Add a new clock driver for sunxi SOCs
+      clk: ux500: Fix prcmu clocks registration
+      ARM: imx: adapt clk_busy_mux to new clk_mux struct
+      clk: Add composite clock type
+      clk: add table lookup to mux
+      clk: Fix incorrect return type in clk.c
+      clk: prima2: fix return value check in sirfsoc_of_clk_init()
+      clk:SPEAr1340: Correct parent clock configuration
+      documentation: clk: fix couple of misspelling
+      ...
+
+commit b2273be8d2df7b77165a70930064aeb9e8faebfa
+Author: Sjur Brændeland <sjur.brandeland@stericsson.com>
+Date:   Sun Mar 24 14:19:44 2013 +1030
+
+    caif_virtio: Use vringh_notify_enable correctly
+    
+    Check on the correct return value from
+    vringh_notify_enable_kern(). It returns false if
+    more packets are available, not true.
+    
+    Signed-off-by: Sjur Brændeland <sjur.brandeland@stericsson.com>
+    Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
+
+commit 5fda6858a49c2d8706adcc05f083b64af172d3eb
+Author: Sachin Kamat <sachin.kamat@linaro.org>
+Date:   Wed Mar 13 15:17:49 2013 +0530
+
+    clk: Fix incorrect return type in clk.c
+    
+    Return type of function clk_propagate_rate_change is a pointer.
+    But 0 was being returned. Change it to NULL.
+    Silences the following warning:
+    drivers/clk/clk.c:977:24: warning: Using plain integer as NULL pointer
+    
+    Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+    Reviewed-by: Pankaj Jangra <jangra.pankaj9@gmail.com>
+    Signed-off-by: Mike Turquette <mturquette@linaro.org>
+
+commit 1abeebeaa5c0d577c1c66c19aa75470fcefd8396
+Author: Lee Jones <lee.jones@linaro.org>
+Date:   Thu Dec 20 11:11:19 2012 +0000
+
+    pinctrl/abx500: replace incorrect return value
+    
+    Currently in the empty abx500_pin_config_get() function, we're
+    returning -EINVAL, with a comment stating that the reason for the
+    failure is that the function isn't implemented yet. Well there's
+    a proper return code for that. If we use it, we can do away with
+    the comment too, as it would be implied.
+    
+    Signed-off-by: Lee Jones <lee.jones@linaro.org>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+commit dc71bcf1b99c265fffdb1e8c60e7933612f3bca7
+Author: Thomas Abraham <thomas.abraham@linaro.org>
+Date:   Sat Jan 19 10:20:42 2013 -0800
+
+    of: fix incorrect return value of of_find_matching_node_and_match()
+    
+    The of_find_matching_node_and_match() function incorrectly sets the matched
+    entry to 'matches' when the compatible value of a node matches one of the
+    possible values. This results in incorrectly selecting the the first entry in
+    the 'matches' list as the matched entry. Fix this by noting down the result of
+    the call to of_match_node() and setting that as the matched entry.
+    
+    Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+    Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+
+commit 15f86bde29f0fdfb877d9c753547fa2e2f5ef1fe
+Author: Pratyush Anand <pratyush.anand@st.com>
+Date:   Mon Jan 14 15:59:33 2013 +0530
+
+    usb: dwc3: gadget: correct return from ep_queue
+    
+    Its better to return from each if condition as they are mutually
+    exclusive.
+    
+    Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
+    Signed-off-by: Felipe Balbi <balbi@ti.com>
+
+commit 7dea1ff3b7b48356c02cb00d6a4e8d5aaf680830
+Merge: 2ac1e66 e8d6539
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon Jan 14 20:20:44 2013 -0800
+
+    Merge tag 'regmap-debugfs-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap
+    
+    Pull regmap debugfs optimisation fixes from Mark Brown:
+     "The debugfs optimisations merged in v3.8 weren't my finest hour, there
+      were a number of cases that the more complex algorithm made worse
+      especially around the error handling.  This patch series should
+      address those issues."
+    
+    * tag 'regmap-debugfs-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap:
+      regmap: debugfs: Make sure we store the last entry in the offset cache
+      regmap: debugfs: Ensure a correct return value for empty caches
+      regmap: debugfs: Discard the cache if we fail to allocate an entry
+      regmap: debugfs: Fix check for block start in cached seeks
+      regmap: debugfs: Fix attempts to read nonexistant register blocks
+
+commit 5bd9f4bb34c16b62725b9486a290c01b1fdfec1c
+Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Date:   Tue Jan 8 13:44:50 2013 +0000
+
+    regmap: debugfs: Ensure a correct return value for empty caches
+    
+    This should never happen in the real world.
+    
+    Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+
+commit 86ff7f1d4be99080d740fd88495154717cd39e2b
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Fri Sep 7 06:16:03 2012 -0300
+
+    [media] em28xx: fill in readbuffers and fix incorrect return code
+    
+    g/s_parm should fill in readbuffers.
+    For non-webcams s_parm should return -ENOTTY instead of -EINVAL.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Devin Heitmueller <dheitmueller@kernellabs.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+commit 392d4cad7907f6cb4ffc85e135a01abfddc89027
+Author: Johannes Berg <johannes.berg@intel.com>
+Date:   Thu Dec 27 21:37:04 2012 +0100
+
+    iwlwifi: fix PCIe interrupt handle return value
+    
+    By accident, commit eb6476441bc2fecf6232a87d0313a85f8e3da7f4
+    ("iwlwifi: protect use_ict with irq_lock") changed the return
+    value of the iwl_pcie_isr() function in case it handles an
+    interrupt -- it now returns IRQ_NONE instead of IRQ_HANDLED.
+    
+    Put back the correct return value.
+    
+    Cc: stable@vger.kernel.org
+    Reviewed-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+    Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+
+commit d71f2f88825b31553881944959962b1871099e1f
+Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Date:   Wed Dec 5 11:59:22 2012 +0100
+
+    ACPI / PM: Fix header of acpi_dev_pm_detach() in acpi.h
+    
+    The header of acpi_dev_pm_detach() in include/linux/acpi.h has an
+    incorrect return type, which should be void.  Fix that.
+    
+    Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+commit 3ce14acb90c9217bcbc9092cb7e404a5bf55efaf
+Merge: acf1cf6 be7fd3b
+Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Wed Nov 21 12:32:57 2012 -0800
+
+    Merge tag 'iio-for-3.8e' of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio into staging-next
+    
+    From Jonathan:
+    
+      "Fifth round of new IIO drivers, cleanups and fixes for the 3.8 cycle.
+    
+      Here we have a number of minor fixes.
+      * a quirk for the hid sensor driver should be a boolean option.
+      * return an error for a failed memdup in the hid sensor driver.
+      * Fix a return value in adt7410.
+      * A double free in the IIO event infrastructure.
+      * Disabling interrupts in tsl2563 was wrong (never been correct!)
+      * Incorrect signature for the iio_buffer_register stub
+      * Incorrect return for isl29018 write_raw callback.
+      * A number of minor fixes as part of the various rework series.
+    
+      New drivers and major rework.
+      * Introduce and use extensively an adis library for numerous spi
+        Analog Devices mems sensors.  This then moves out of staging.
+      * Lots of new stuff then added to this library to support newer
+        sensors.
+      * New drivers for ADIS16136 and ADIS16480 and similar.
+      * Core support for barometric pressure sensors.
+      * ad7298 cleanup and move out of staging.
+    
+      The bulk of this is from Lars-Peter Clausen.  He's been rather
+      busy!"
+
+commit 22ae19c6e3c22b390952e90f452f26adad9b8687
+Author: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Sun Jul 29 22:48:31 2012 -0700
+
+    Input: uinput - fix race that can block nonblocking read
+    
+    Consider two threads calling read() on the same uinput-fd, both
+    non-blocking. Assume there is data-available so both will simultaneously
+    pass:
+    	udev->head == udev->tail
+    
+    Then the first thread goes to sleep and the second one pops the message
+    from the queue. Now assume udev->head == udev->tail. If the first thread
+    wakes up it will call wait_event_*() and sleep in the waitq. This
+    effectively turns the non-blocking FD into a blocking one.
+    
+    We fix this by attempting to fetch events from the queue first and only
+    if we fail to retrieve any events we either return -EAGAIN (in case of
+    non-blocing read) or wait until there are more events.
+    
+    This also fixes incorrect return code (we were returning 0 instead of
+     -EAGAIN for non-blocking reads) when an event is "stolen" by another
+    thread. Blocking reads will now continue to wait instead of returning 0
+    in this scenario.
+    
+    Count of 0 continues to be a special case, as per spec: we will check for
+    device existence and whether there are events in the queue, but no events
+    will be actually retrieved.
+    
+    Reported-by: David Herrmann <dh.herrmann@googlemail.com>
+    Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
+
+commit bdc0077af574800d24318b6945cf2344e8dbb050
+Merge: 801b036 e96eb23
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Jul 24 18:11:22 2012 -0700
+
+    Merge tag 'scsi-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+    
+    Pull first round of SCSI updates from James Bottomley:
+     "The most important feature of this patch set is the new async
+      infrastructure that makes sure async_synchronize_full() synchronizes
+      all domains and allows us to remove all the hacks (like having
+      scsi_complete_async_scans() in the device base code) and means that
+      the async infrastructure will "just work" in future.
+    
+      The rest is assorted driver updates (aacraid, bnx2fc, virto-scsi,
+      megaraid, bfa, lpfc, qla2xxx, qla4xxx) plus a lot of infrastructure
+      work in sas and FC.
+    
+      Signed-off-by: James Bottomley <JBottomley@Parallels.com>"
+    
+    * tag 'scsi-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi: (97 commits)
+      [SCSI] Revert "[SCSI] fix async probe regression"
+      [SCSI] cleanup usages of scsi_complete_async_scans
+      [SCSI] queue async scan work to an async_schedule domain
+      [SCSI] async: make async_synchronize_full() flush all work regardless of domain
+      [SCSI] async: introduce 'async_domain' type
+      [SCSI] bfa: Fix to set correct return error codes and misc cleanup.
+      [SCSI] aacraid: Series 7 Async. (performance) mode support
+      [SCSI] aha152x: Allow use on 64bit systems
+      [SCSI] virtio-scsi: Add vdrv->scan for post VIRTIO_CONFIG_S_DRIVER_OK LUN scanning
+      [SCSI] bfa: squelch lockdep complaint with a spin_lock_init
+      [SCSI] qla2xxx: remove unnecessary reads of PCI_CAP_ID_EXP
+      [SCSI] qla4xxx: remove unnecessary read of PCI_CAP_ID_EXP
+      [SCSI] ufs: fix incorrect return value about SUCCESS and FAILED
+      [SCSI] ufs: reverse the ufshcd_is_device_present logic
+      [SCSI] ufs: use module_pci_driver
+      [SCSI] usb-storage: update usb devices for write cache quirk in quirk list.
+      [SCSI] usb-storage: add support for write cache quirk
+      [SCSI] set to WCE if usb cache quirk is present.
+      [SCSI] virtio-scsi: hotplug support for virtio-scsi
+      [SCSI] virtio-scsi: split scatterlist per target
+      ...
+
+commit 529f9a765509c2c141ecfee0c54e17bf9a6b8bc1
+Author: Krishna Gudipati <kgudipat@brocade.com>
+Date:   Fri Jul 13 16:08:22 2012 -0700
+
+    [SCSI] bfa: Fix to set correct return error codes and misc cleanup.
+    
+    - Remove unnecessary if NULL check in function bfa_fcs_vport_free().
+    - Set correct return error codes in case of memory allocation failure
+      in the BSG ELS/CT passthru command handler.
+    
+    Signed-off-by: Krishna Gudipati <kgudipat@brocade.com>
+    Signed-off-by: James Bottomley <JBottomley@Parallels.com>
+
+commit 94c122ab01f84332c371dc4ae0f5b70e879173d6
+Author: Namjae Jeon <linkinjeon@gmail.com>
+Date:   Tue Jul 10 20:41:54 2012 +0530
+
+    [SCSI] ufs: fix incorrect return value about SUCCESS and FAILED
+    
+    Currently the UFS host driver has returned incorrect values for SUCCESS
+    and FAILED.  Fix it to return the correct value to the upper layer.
+    
+    Signed-off-by: Namjae Jeon <linkinjeon@gmail.com>
+    Acked-by: Santosh Y <santoshsy@gmail.com>
+    Signed-off-by: Venkatraman S <svenkatr@ti.com>
+    Signed-off-by: James Bottomley <JBottomley@Parallels.com>
+
+commit af4f8ba31a4e328677bec493ceeaf112ca193b65
+Merge: efff047 c03f94c
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri Jun 1 16:50:23 2012 -0700
+
+    Merge branch 'slab/for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/penberg/linux
+    
+    Pull slab updates from Pekka Enberg:
+     "Mainly a bunch of SLUB fixes from Joonsoo Kim"
+    
+    * 'slab/for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/penberg/linux:
+      slub: use __SetPageSlab function to set PG_slab flag
+      slub: fix a memory leak in get_partial_node()
+      slub: remove unused argument of init_kmem_cache_node()
+      slub: fix a possible memory leak
+      Documentations: Fix slabinfo.c directory in vm/slub.txt
+      slub: fix incorrect return type of get_any_partial()
+
+commit cc7b6f257d42eb9829b38e3a8807943426a89a87
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Sun May 6 09:28:21 2012 -0300
+
+    [media] gspca: Fix querycap and incorrect return codes
+    
+    Add V4L2_CAP_DEVICE_CAPS support to querycap and replace -EINVAL by
+    -ENOTTY whenever an ioctl is not supported.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+commit de3ec035627b4aba8905643084c1f7944acc99cc
+Author: Joonsoo Kim <js1304@gmail.com>
+Date:   Fri Jan 27 00:12:23 2012 -0800
+
+    slub: fix incorrect return type of get_any_partial()
+    
+    Commit 497b66f2ecc97844493e6a147fd5a7e73f73f408 ('slub: return object pointer
+    from get_partial() / new_slab().') changed return type of some functions.
+    This updates missing part.
+    
+    Signed-off-by: Joonsoo Kim <js1304@gmail.com>
+    Signed-off-by: Pekka Enberg <penberg@kernel.org>
+
+commit 2a31b37a8956154df099400ba93cd6898a629c6d
+Author: Bruce Allan <bruce.w.allan@intel.com>
+Date:   Wed Feb 8 02:55:51 2012 +0000
+
+    e1000e: potentially incorrect return for e1000e_setup_fiber_serdes_link
+    
+    In the unlikely event that e1000_poll_fiber_serdes_link_generic() is called
+    and it returns an error, the returned error code value is not propagated to
+    the caller of e1000e_setup_fiber_serdes_link().
+    
+    Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
+    Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+    Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+commit e561a705a61e8d4c32a1259c611703a3976347aa
+Author: Bruce Allan <bruce.w.allan@intel.com>
+Date:   Wed Feb 8 02:55:46 2012 +0000
+
+    e1000e: potentially incorrect return for e1000_init_hw_ich8lan
+    
+    In the unlikely event that e1000_setup_link_ich8lan() returns an error,
+    the returned error code value is not propagated to the caller of
+    e1000_init_hw_ich8lan().
+    
+    Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
+    Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+    Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+commit d7eb33840bee3c8de3f64f3861350bcfac3eaf82
+Author: Bruce Allan <bruce.w.allan@intel.com>
+Date:   Wed Feb 8 02:55:14 2012 +0000
+
+    e1000e: potentially incorrect return for e1000_set_d3_lplu_state_ich8lan
+    
+    In the unlikely event that e1e_wphy() returns an error, the returned error
+    code is not propogated to the caller of e1000_set_d3_lplu_state_ich8lan().
+    With this change, there is a rare possibility that ret_val might not get
+    set so it must be initialized.
+    
+    Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
+    Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+    Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+commit 8649f4319656f9fcaa59726799a824254b0a1bce
+Author: Bruce Allan <bruce.w.allan@intel.com>
+Date:   Wed Feb 8 02:54:58 2012 +0000
+
+    e1000e: potential incorrect return for e1000_setup_copper_link_80003es2lan
+    
+    In the unlikely event that e1000e_setup_copper_link() returns an error,
+    the returned error code value is not propogated to the caller of
+    e1000_setup_copper_link_80003es2lan().
+    
+    Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
+    Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+    Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+commit 520d6f225f83128e9ea083a9a226f807235cc76c
+Author: Bruce Allan <bruce.w.allan@intel.com>
+Date:   Wed Feb 8 02:54:53 2012 +0000
+
+    e1000e: potentially incorrect return for e1000_cfg_kmrn_10_100_80003es2lan
+    
+    In the unlikely event that e1e_wphy() returns an error, the returned error
+    code value is not propogated to the caller of
+    e1000_cfg_kmrn_10_100_80003es2lan().
+    
+    Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
+    Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+    Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+
+commit 15c9a0acc3f7873db4b7d35d016729b2dc229b49
+Author: Grant Likely <grant.likely@secretlab.ca>
+Date:   Mon Dec 12 09:25:57 2011 -0700
+
+    of: create of_phandle_args to simplify return of phandle parsing data
+    
+    of_parse_phandle_with_args() needs to return quite a bit of data.  Rather
+    than making each datum a separate **out_ argument, this patch creates
+    struct of_phandle_args to contain all the returned data and reworks the
+    user of the function.  This patch also enables of_parse_phandle_with_args()
+    to return the device node pointer for the phandle node.
+    
+    This patch also ends up being fairly major surgery to
+    of_parse_handle_with_args().  The existing structure didn't work well
+    when extending to use of_phandle_args, and I discovered bugs during testing.
+    I also took the opportunity to rename the function to be like the
+    existing of_parse_phandle().
+    
+    v2: - moved declaration of of_phandle_args to fix compile on non-DT builds
+        - fixed incorrect index in example usage
+        - fixed incorrect return code handling for empty entries
+    
+    Reviewed-by: Shawn Guo <shawn.guo@freescale.com>
+    Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+
+commit de2e56cea25c80f91a6c6699de40fb3fe8b2479d
+Author: Larry Finger <Larry.Finger@lwfinger.net>
+Date:   Wed Nov 23 21:30:19 2011 -0600
+
+    rtlwifi: Fix incorrect return of IRQ_HANDLED
+    
+    The recent discussion regarding an incorrect return of IRQ_HANDLED
+    from rt2800pci caused me to look at this PCI interrupt routine. I
+    discovered that changes were needed.
+    
+    Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+    Signed-off-by: John W. Linville <linville@tuxdriver.com>
+
+commit 1eb63378354ac37b7e27d256bbf84684751bac32
+Merge: 1a4ceab bac2dac
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon Oct 31 15:42:54 2011 -0700
+
+    Merge branch 'v4l_for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+    
+    * 'v4l_for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media: (348 commits)
+      [media] pctv452e: Remove bogus code
+      [media] adv7175: Make use of media bus pixel codes
+      [media] media: vb2: fix incorrect return value
+      [media] em28xx: implement VIDIOC_ENUM_FRAMESIZES
+      [media] cx23885: Stop the risc video fifo before reconfiguring it
+      [media] cx23885: Avoid incorrect error handling and reporting
+      [media] cx23885: Avoid stopping the risc engine during buffer timeout
+      [media] cx23885: Removed a spurious function cx23885_set_scale()
+      [media] cx23885: v4l2 api compliance, set the audioset field correctly
+      [media] cx23885: hook the audio selection functions into the main driver
+      [media] cx23885: add generic functions for dealing with audio input selection
+      [media] cx23885: fixes related to maximum number of inputs and range checking
+      [media] cx23885: Initial support for the MPX-885 mini-card
+      [media] cx25840: Ensure AUDIO6 and AUDIO7 trigger line-in baseband use
+      [media] cx23885: Enable audio line in support from the back panel
+      [media] cx23885: Allow the audio mux config to be specified on a per input basis
+      [media] cx25840: Enable support for non-tuner LR1/LR2 audio inputs
+      [media] cx23885: Name an internal i2c part and declare a bitfield by name
+      [media] cx23885: Ensure VBI buffers timeout quickly - bugfix for vbi hangs during streaming
+      [media] cx23885: remove channel dump diagnostics when a vbi buffer times out
+      ...
+    
+    Fix up trivial conflicts in drivers/misc/altera-stapl/altera.c (header
+    file rename vs add)
+
+commit 4c2625db6f172114bcc4fd9e62f3c030c5fb4e4c
+Author: Marek Szyprowski <m.szyprowski@samsung.com>
+Date:   Mon Oct 3 03:21:45 2011 -0300
+
+    [media] media: vb2: fix incorrect return value
+    
+    This patch fixes incorrect return value. Errors should be returned
+    as negative numbers.
+    
+    Reported-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
+    Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+commit 231e58e7d9494bddbd05479f9f50ed0be66794d7
+Merge: a2b4910 9be3be1
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon Sep 26 13:33:44 2011 -0700
+
+    Merge branch 'kvm-updates/3.1' of git://github.com/avikivity/kvm
+    
+    * 'kvm-updates/3.1' of git://github.com/avikivity/kvm:
+      KVM: x86 emulator: fix Src2CL decode
+      KVM: MMU: fix incorrect return of spte
+
+commit 41bc3186b3c92a4ca05e2aa14bb6272fb491e679
+Author: Zhao Jin <cronozhj@gmail.com>
+Date:   Mon Sep 19 12:19:51 2011 +0800
+
+    KVM: MMU: fix incorrect return of spte
+    
+    __update_clear_spte_slow should return original spte while the
+    current code returns low half of original spte combined with high
+    half of new spte.
+    
+    Signed-off-by: Zhao Jin <cronozhj@gmail.com>
+    Reviewed-by: Xiao Guangrong <xiaoguangrong@cn.fujitsu.com>
+    Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+
+commit ab6baf980b095c70a56c5eb2f58166aef8a0edc8
+Author: John Fastabend <john.r.fastabend@intel.com>
+Date:   Tue Jun 21 07:34:58 2011 +0000
+
+    dcb: fix return type on dcb_setapp()
+    
+    Incorrect return type on dcb_setapp() this routine
+    returns negative error codes. All call sites of
+    dcb_setapp() assign the return value to an int already
+    so no need to update drivers.
+    
+    Signed-off-by: John Fastabend <john.r.fastabend@intel.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit ef2398019b305827ea7130ebaf7bf521b444530e
+Merge: 12871a0 dcc32b8
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Jun 7 19:09:26 2011 -0700
+
+    Merge branch 'drm-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/airlied/drm-2.6
+    
+    * 'drm-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/airlied/drm-2.6:
+      drm/nv40: fall back to paged dma object for the moment
+      drm/nouveau: fix leak of gart mm node
+      drm/nouveau: fix vram page mapping when crossing page table boundaries
+      drm/nv17-nv40: Fix modesetting failure when pitch == 4096px (fdo bug 35901).
+      drm/nouveau: don't create accel engine objects when noaccel=1
+      drm/nvc0: recognise 0xdX chipsets as NV_C0
+      drm/i915: Add a no lvds quirk for the Asus EeeBox PC EB1007
+      drm/i915: Share the common force-audio property between connectors
+      drm/i915: Remove unused enum "chip_family"
+      drm/915: fix relaxed tiling on gen2: tile height
+      drm/i915/crt: Explicitly return false if connected to a digital monitor
+      drm/i915: Replace ironlake_compute_wm0 with g4x_compute_wm0
+      drm/i915: Only print out the actual number of fences for i915_error_state
+      drm/i915: s/addr & ~PAGE_MASK/offset_in_page(addr)/
+      drm: i915: correct return status in intel_hdmi_mode_valid()
+      drm/i915: fix regression after clock gating init split
+      drm/i915: fix if statement in ivybridge irq handler
+
+commit de52bcab836e6ad21bb0c03c6030725044b2819e
+Merge: 59c5f46 6a574b5
+Author: Dave Airlie <airlied@redhat.com>
+Date:   Tue Jun 7 09:54:04 2011 +1000
+
+    Merge remote branch 'keithp/drm-intel-fixes' of /ssd/git/drm-next into drm-fixes
+    
+    * 'keithp/drm-intel-fixes' of /ssd/git/drm-next:
+      drm/i915: Add a no lvds quirk for the Asus EeeBox PC EB1007
+      drm/i915: Share the common force-audio property between connectors
+      drm/i915: Remove unused enum "chip_family"
+      drm/915: fix relaxed tiling on gen2: tile height
+      drm/i915/crt: Explicitly return false if connected to a digital monitor
+      drm/i915: Replace ironlake_compute_wm0 with g4x_compute_wm0
+      drm/i915: Only print out the actual number of fences for i915_error_state
+      drm/i915: s/addr & ~PAGE_MASK/offset_in_page(addr)/
+      drm: i915: correct return status in intel_hdmi_mode_valid()
+      drm/i915: fix regression after clock gating init split
+      drm/i915: fix if statement in ivybridge irq handler
+
+commit 5cbba41d2857477bd9a008f2d82c0622db1a8dee
+Author: Nicolas Kaiser <nikai@nikai.net>
+Date:   Mon May 30 12:48:26 2011 +0200
+
+    drm: i915: correct return status in intel_hdmi_mode_valid()
+    
+    Signed-off-by: Nicolas Kaiser <nikai@nikai.net>
+    Reviewed-by: Keith Packard <keithp@keithp.com>
+    Signed-off-by: Keith Packard <keithp@keithp.com>
+
+commit 82aff107f8c9194586f68e86412246629d05670a
+Merge: d974d90 208b3a4
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri May 20 13:28:01 2011 -0700
+
+    Merge branch 'merge' of git://git.kernel.org/pub/scm/linux/kernel/git/benh/powerpc
+    
+    * 'merge' of git://git.kernel.org/pub/scm/linux/kernel/git/benh/powerpc: (152 commits)
+      powerpc: Fix hard CPU IDs detection
+      powerpc/pmac: Update via-pmu to new syscore_ops
+      powerpc/kvm: Fix the build for 32-bit Book 3S (classic) processors
+      powerpc/kvm: Fix kvmppc_core_pending_dec
+      powerpc: Remove last piece of GEMINI
+      powerpc: Fix for Pegasos keyboard and mouse
+      powerpc: Make early memory scan more resilient to out of order nodes
+      powerpc/pseries/iommu: Cleanup ddw naming
+      powerpc/pseries/iommu: Find windows after kexec during boot
+      powerpc/pseries/iommu: Remove ddw property when destroying window
+      powerpc/pseries/iommu: Add additional checks when changing iommu mask
+      powerpc/pseries/iommu: Use correct return type in dupe_ddw_if_already_created
+      powerpc: Remove unused/obsolete CONFIG_XICS
+      misc: Add CARMA DATA-FPGA Programmer support
+      misc: Add CARMA DATA-FPGA Access Driver
+      powerpc: Make IRQ_NOREQUEST last to clear, first to set
+      powerpc: Integrated Flash controller device tree bindings
+      powerpc/85xx: Create dts of each core in CAMP mode for P1020RDB
+      powerpc/85xx: Fix PCIe IDSEL for Px020RDB
+      powerpc/85xx: P2020 DTS: re-organize dts files
+      ...
+
+commit 23a6c484047bb8ac50e6d5bb718f8d178a4bf32e
+Author: Nishanth Aravamudan <nacc@us.ibm.com>
+Date:   Wed May 11 11:07:51 2011 +0000
+
+    powerpc/pseries/iommu: Use correct return type in dupe_ddw_if_already_created
+    
+    Otherwise we get silent truncations.
+    
+    Signed-off-by: Nishanth Aravamudan <nacc@us.ibm.com>
+    Cc: Anton Blanchard <anton@samba.org>
+    Cc: Milton Miller <miltonm@bga.com>
+    Cc: linuxppc-dev@ozlabs.org
+    Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+
+commit 904f0bc482201fa86e75c330d79dfd11be494cf8
+Author: Nicholas Bellinger <nab@linux-iscsi.org>
+Date:   Wed Mar 2 15:52:51 2011 -0800
+
+    [SCSI] target: Fix volume size misreporting for volumes > 2TB
+    
+    the target infrastructure fails to send the correct conventional size
+    to READ_CAPACITY that force a retry with READ_CAPACITY_16, which reads
+    the capacity for devices > 2TB.  Fix by adding the correct return to
+    trigger RC(16).
+    
+    Reported-by: Ben Jarvis <bjarvismn@gmail.com>
+    Signed-off-by: Signed-off-by: Nicholas A. Bellinger <nab@linux-iscsi.org>
+    Cc: stable@kernel.org
+    Signed-off-by: James Bottomley <James.Bottomley@suse.de>
+
+commit a2640111d5edb3f4e6dd6089c0dbddc7590110b4
+Merge: 0d6e82e 1621dbb
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed Feb 16 09:07:00 2011 -0800
+
+    Merge git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi-rc-fixes-2.6
+    
+    * git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi-rc-fixes-2.6:
+      [SCSI] qla2xxx: Return DID_NO_CONNECT when FC device is lost.
+      [SCSI] mptfusion: Bump version 03.04.18
+      [SCSI] mptfusion: Fix Incorrect return value in mptscsih_dev_reset
+      [SCSI] mptfusion: mptctl_release is required in mptctl.c
+      [SCSI] target: fix use after free detected by SLUB poison
+      [SCSI] target: Remove procfs based target_core_mib.c code
+      [SCSI] target: Fix SCF_SCSI_CONTROL_SG_IO_CDB breakage
+      [SCSI] target: Fix top-level configfs_subsystem default_group shutdown breakage
+      [SCSI] target: fixed missing lock drop in error path
+      [SCSI] target: Fix demo-mode MappedLUN shutdown UA/PR breakage
+      [SCSI] target/iblock: Fix failed bd claim NULL pointer dereference
+      [SCSI] target: iblock/pscsi claim checking for NULL instead of IS_ERR
+      [SCSI] scsi_debug: Fix 32-bit overflow in do_device_access causing memory corruption
+      [SCSI] qla2xxx: Change from irq to irqsave with host_lock
+      [SCSI] qla2xxx: Fix race that could hang kthread_stop()
+
+commit bcfe42e98047f1935c5571c8ea77beb2d43ec19d
+Author: Kashyap, Desai <kashyap.desai@lsi.com>
+Date:   Thu Feb 10 11:53:44 2011 +0530
+
+    [SCSI] mptfusion: Fix Incorrect return value in mptscsih_dev_reset
+    
+    There's a branch at the end of this function that
+    is supposed to normalize the return value with what
+    the mid-layer expects. In this one case, we get it wrong.
+    
+    Also increase the verbosity of the INFO level printk
+    at the end of mptscsih_abort to include the actual return value
+    and the scmd->serial_number. The reason being success
+    or failure is actually determined by the state of
+    the internal tag list when a TMF is issued, and not the
+    return value of the TMF cmd. The serial_number is also
+    used in this decision, thus it's useful to know for debugging
+    purposes.
+    
+    Cc: stable@kernel.org
+    Reported-by: Peter M. Petrakis <peter.petrakis@canonical.com>
+    Signed-off-by: Kashyap Desai <kashyap.desai@lsi.com>
+    Signed-off-by: James Bottomley <James.Bottomley@suse.de>
+
+commit 79c9da0d0539fb341a1b48a2a5a23d974726de90
+Author: Thomas Gleixner <tglx@linutronix.de>
+Date:   Tue Feb 1 13:51:45 2011 +0000
+
+    posix-cpu-timers: Remove the stub nanosleep functions
+    
+    CLOCK_THREAD_CPUTIME_ID implements stub functions for nanosleep and
+    nanosleep_restart, which return -EINVAL. That return value is
+    wrong. The correct return value is -ENOTSUP.
+    
+    Remove the stubs and let the new dispatch code return the correct
+    error code.
+    
+    Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+    Acked-by: John Stultz <johnstul@us.ibm.com>
+    Tested-by: Richard Cochran <richard.cochran@omicron.at>
+    LKML-Reference: <20110201134418.422446502@linutronix.de>
+
+commit 3332bc5446e034566e8a56bf7a7cd479ca35bd6d
+Author: Tomoya <tomoya-linux@dsn.okisemi.com>
+Date:   Sun Dec 12 20:24:23 2010 +0000
+
+    pch_can: Fix incorrect return processing
+    
+    Fix incorrect return processing.
+    
+    Signed-off-by: Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit f65a03f6ab6f53a6f2847dbac232dcb38b3b3642
+Author: Dan Carpenter <error27@gmail.com>
+Date:   Tue Aug 10 18:03:31 2010 -0700
+
+    kexec: return -EFAULT on copy_to_user() failures
+    
+    copy_to/from_user() returns the number of bytes remaining to be copied.
+    It never returns a negative value.  The correct return code is -EFAULT and
+    not -EIO.
+    
+    All the callers check for non-zero returns so that's Ok, but the return
+    code is passed to the user so we should fix this.
+    
+    Signed-off-by: Dan Carpenter <error27@gmail.com>
+    Cc: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+    Cc: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+    Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+    Cc: Simon Kagstrom <simon.kagstrom@netinsight.net>
+    Acked-by: WANG Cong <xiyou.wangcong@gmail.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+commit 9fb866f317def195bb794120e13d1d73c2a94bb2
+Author: Axel Lin <axel.lin@gmail.com>
+Date:   Tue Jul 20 15:19:47 2010 -0700
+
+    asus-laptop: fix incorrect return value for write_acpi_int_ret if handle is NULL
+    
+    According to the comments of write_acpi_int_ret(), write_acpi_int_ret()
+    should return 0 if write is successful, -1 else.  Thus if handle is NULL,
+    the write does not happen, it should return -1.
+    
+    Signed-off-by: Axel Lin <axel.lin@gmail.com>
+    Cc: Matthew Garrett <mjg@redhat.com>
+    Cc: Corentin Chary <corentincj@iksaif.net>
+    Cc: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Matthew Garrett <mjg@redhat.com>
+
+commit b966346c344f592c8e6a84c9c274a7dedbc057ad
+Author: Vikas Chaudhary <vikas.chaudhary@qlogic.com>
+Date:   Sat Jul 10 14:49:19 2010 +0530
+
+    [SCSI] qla4xxx: correct return status in function qla4xxx_fw_ready
+    
+    Handle fw_state "auto discovery in progress" correctly
+    to avoid marking adapter as offline.
+    
+    Signed-off-by: Vikas Chaudhary <vikas.chaudhary@qlogic.com>
+    Signed-off-by: Ravi Anand <ravi.anand@qlogic.com>
+    Reviewed-by: Mike Christie <michaelc@cs.wisc.edu>
+    Signed-off-by: James Bottomley <James.Bottomley@suse.de>
+
+commit e2e2400bd4faee24d11872134b7ae5bd363749c0
+Merge: e4ce30f f9e8894
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu May 27 10:28:11 2010 -0700
+
+    Merge git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi-misc-2.6
+    
+    * git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi-misc-2.6:
+      [SCSI] fix race in scsi_target_reap
+      [SCSI] aacraid: Eliminate use after free
+      [SCSI] arcmsr: Support HW reset for EH and polling scheme for scsi device
+      [SCSI] bfa: fix system crash when reading sysfs fc_host statistics
+      [SCSI] iscsi_tcp: remove sk_sleep check
+      [SCSI] ipr: improve interrupt service routine performance
+      [SCSI] ipr: set the data list length in the request control block
+      [SCSI] ipr: fix a register read to use the correct address for 64 bit adapters
+      [SCSI] ipr: include the resource path in the IOA status area structure
+      [SCSI] ipr: implement fixes for 64 bit adapter support
+      [SCSI] be2iscsi: correct return value in mgmt_invalidate_icds()
+
+commit e6b50c30fa8d46c9401c2d48eee2351bdbb4c51c
+Author: Dan Carpenter <error27@gmail.com>
+Date:   Fri May 7 10:53:45 2010 +0200
+
+    [SCSI] be2iscsi: correct return value in mgmt_invalidate_icds()
+    
+    This function should return 0 on error.  Returning -1 would cause a
+    crash.
+    
+    Also there is an extra space before the newline character and a missing
+    space between the "for" and the "mgmt_invalidate_icds".  I put the string
+    on one line.  The current version of checkpatch.pl complains that the
+    line is too long, but it makes grepping easier.
+    
+    Signed-off-by: Dan Carpenter <error27@gmail.com>
+    Reviewed-by: Mike Christie <michaelc@cs.wisc.edu>
+    Signed-off-by: James Bottomley <James.Bottomley@suse.de>
+
+commit 4818d14de36228a749f714b450a85c1b35542e6f
+Author: Prasanna S.Panchamukhi <prasannax.s.panchamukhi@intel.com>
+Date:   Mon Jan 18 14:28:23 2010 -0800
+
+    wimax/i2400m: fix incorrect return -ESHUTDOWN when there is no Tx buffer available
+    
+    i2400m_tx() routine was returning -ESHUTDOWN even when there was no Tx buffer
+    available. This patch fixes the i2400m_tx() to return -ESHUTDOWN only when
+    the device is down(i2400m->tx_buf is NULL) and also to return -ENOSPC
+    when there is no Tx buffer. Error seen in the kernel log.
+    kernel: i2400m_sdio mmc0:0001:1: can't send message 0x5606: -108
+    kernel: i2400m_sdio mmc0:0001:1: Failed to issue 'Enter power save'command: -108
+    
+    Signed-off-by: Prasanna S.Panchamukhi <prasannax.s.panchamukhi@intel.com>
+
+commit 0af0d04b8db7712498558541cbedeeebdbabf70f
+Author: Wey-Yi Guy <wey-yi.w.guy@intel.com>
+Date:   Mon Apr 26 16:08:27 2010 -0700
+
+    iwlwifi: give correct return information for tx power debugfs
+    
+    Return -EAGAIN when request tx power information and uCode is not ready;
+    so it will not confuse with tx power information not available.
+    
+    Signed-off-by: Wey-Yi Guy <wey-yi.w.guy@intel.com>
+    Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+
+commit c29c949288d343be0d5c4f3091bc87ac047e1a09
+Author: Jan Engelhardt <jengelh@medozas.de>
+Date:   Sun May 2 14:04:54 2010 +0200
+
+    netfilter: xtables: fix incorrect return code
+    
+    Signed-off-by: Jan Engelhardt <jengelh@medozas.de>
+
+commit 937c397eb633b804d9a806d08c395ecfc42b1fec
+Author: Wey-Yi Guy <wey-yi.w.guy@intel.com>
+Date:   Fri Jan 15 13:43:36 2010 -0800
+
+    iwlwifi: correct return code for log_event
+    
+    When dumping event log in debugfs, iwl_dump_nic_event_log()
+    should return the correct error code instead of let the calling
+    function makes it own assumption.
+    
+    Signed-off-by: Wey-Yi Guy <wey-yi.w.guy@intel.com>
+    Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+    Signed-off-by: John W. Linville <linville@tuxdriver.com>
+
