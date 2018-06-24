@@ -151,6 +151,12 @@ index 6db909e..fab27e4 100644
 
 ## 6 - `adfs_fplus_read`
 
+**From JUXTA**
+
+```
+ADFS super.c super operation [E] incorrect return value application 5 >10y ✓
+```
+
 ```
 commit b796410630a0f090864d7595c6bffbc0136f0f8c
 Author: Sanidhya Kashyap <sanidhya.gatech@gmail.com>
@@ -182,6 +188,12 @@ index f2ba88a..82d14cd 100644
 ```
 
 ## 7 - `adfs_fill_super`
+
+**From JUXTA**
+
+```
+ADFS super.c super operation [E] incorrect return value application 5 >10y ✓
+```
 
 ```
 commit b796410630a0f090864d7595c6bffbc0136f0f8c
@@ -287,6 +299,12 @@ Date:   Thu Apr 16 12:48:13 2015 -0700
 
 ## 8 - `bfs_create`
 
+**From JUXTA**
+
+```
+BFS dir.c data read [E] incorrect return value application 2 >10y ✓
+```
+
 ```
 commit c3fe5872eb3f5f9e027d61d8a3f5d092168fdbca
 Author: Sanidhya Kashyap <sanidhya.gatech@gmail.com>
@@ -330,6 +348,12 @@ index 08063ae..7a818277 100644
 
 ## 9 - `affs_fill_super`
 
+**From JUXTA**
+
+```
+ADFS super.c super operation [E] incorrect return value application 5 >10y ✓
+```
+
 ```
 commit c8f33d0bec999a4f2b5c3f9380361b88ce6f6ab0
 Author: Sanidhya Kashyap <sanidhya.gatech@gmail.com>
@@ -369,3 +393,141 @@ index 6819d04..3f89c9e 100644
         sync_filesystem(sb);
 ```
 
+## 10 - `hfs_create`
+
+**From JUXTA**
+
+```
+HFS dir.c file / dir creation [E] incorrect return value application 2 >10y ✓
+```
+
+```
+commit 13f244852f1197b623af2d3076fae197d2e038ec
+Author: Chengyu Song <csong84@gatech.edu>
+Date:   Thu Apr 16 12:46:53 2015 -0700
+
+    hfs: incorrect return values
+    
+    In case of memory allocation error, the return should be -ENOMEM, instead
+    of -ENOSPC.
+    
+    Signed-off-by: Chengyu Song <csong84@gatech.edu>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+diff --git a/fs/hfs/dir.c b/fs/hfs/dir.c
+index 1455668..36d1a6a 100644
+--- a/fs/hfs/dir.c
++++ b/fs/hfs/dir.c
+@@ -197,7 +197,7 @@ static int hfs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+ 
+        inode = hfs_new_inode(dir, &dentry->d_name, mode);
+        if (!inode)
+-               return -ENOSPC;
++               return -ENOMEM;
+ 
+        res = hfs_cat_create(inode->i_ino, dir, &dentry->d_name, inode);
+        if (res) {
+```
+
+
+## 11 - `hfs_mkdir`
+
+**From JUXTA**
+
+```
+HFS dir.c file / dir creation [E] incorrect return value application 2 >10y ✓
+```
+
+```
+commit 13f244852f1197b623af2d3076fae197d2e038ec
+Author: Chengyu Song <csong84@gatech.edu>
+Date:   Thu Apr 16 12:46:53 2015 -0700
+
+    hfs: incorrect return values
+    
+    In case of memory allocation error, the return should be -ENOMEM, instead
+    of -ENOSPC.
+    
+    Signed-off-by: Chengyu Song <csong84@gatech.edu>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+diff --git a/fs/hfs/dir.c b/fs/hfs/dir.c
+index 1455668..36d1a6a 100644
+--- a/fs/hfs/dir.c
++++ b/fs/hfs/dir.c
+@@ -226,7 +226,7 @@ static int hfs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+ 
+        inode = hfs_new_inode(dir, &dentry->d_name, S_IFDIR | mode);
+        if (!inode)
+-               return -ENOSPC;
++               return -ENOMEM;
+ 
+        res = hfs_cat_create(inode->i_ino, dir, &dentry->d_name, inode);
+        if (res) {
+```
+
+## 12 - `hfsplus_symlink`
+
+```
+commit 27a4e3884e9c6497f96cc28256c3cdaa93d4cf97
+Author: Chengyu Song <csong84@gatech.edu>
+Date:   Thu Apr 16 12:47:12 2015 -0700
+
+    hfsplus: incorrect return value
+    
+    In case of memory allocation error, the return should be -ENOMEM, instead
+    of -ENOSPC.
+    
+    Signed-off-by: Chengyu Song <csong84@gatech.edu>
+    Reviewed-by: Sergei Antonov <saproj@gmail.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+diff --git a/fs/hfsplus/dir.c b/fs/hfsplus/dir.c
+index f0235c1..3074609 100644
+--- a/fs/hfsplus/dir.c
++++ b/fs/hfsplus/dir.c
+@@ -434,7 +434,7 @@ static int hfsplus_symlink(struct inode *dir, struct dentry *dentry,
+ {
+        struct hfsplus_sb_info *sbi = HFSPLUS_SB(dir->i_sb);
+        struct inode *inode;
+-       int res = -ENOSPC;
++       int res = -ENOMEM;
+ 
+        mutex_lock(&sbi->vh_mutex);
+        inode = hfsplus_new_inode(dir->i_sb, S_IFLNK | S_IRWXUGO);
+```
+
+## 13 - `hfsplus_mknod`
+
+```
+commit 27a4e3884e9c6497f96cc28256c3cdaa93d4cf97
+Author: Chengyu Song <csong84@gatech.edu>
+Date:   Thu Apr 16 12:47:12 2015 -0700
+
+    hfsplus: incorrect return value
+    
+    In case of memory allocation error, the return should be -ENOMEM, instead
+    of -ENOSPC.
+    
+    Signed-off-by: Chengyu Song <csong84@gatech.edu>
+    Reviewed-by: Sergei Antonov <saproj@gmail.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+diff --git a/fs/hfsplus/dir.c b/fs/hfsplus/dir.c
+index f0235c1..3074609 100644
+--- a/fs/hfsplus/dir.c
++++ b/fs/hfsplus/dir.c
+@@ -476,7 +476,7 @@ static int hfsplus_mknod(struct inode *dir, struct dentry *dentry,
+ {
+        struct hfsplus_sb_info *sbi = HFSPLUS_SB(dir->i_sb);
+        struct inode *inode;
+-       int res = -ENOSPC;
++       int res = -ENOMEM;
+ 
+        mutex_lock(&sbi->vh_mutex);
+        inode = hfsplus_new_inode(dir->i_sb, mode);
+```
