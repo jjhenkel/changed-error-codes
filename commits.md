@@ -1,5 +1,36 @@
 # Commits Used for Logs
 
+## 1 - `vidioc_s_jpegcomp`
+
+```
+commit cc7b6f257d42eb9829b38e3a8807943426a89a87
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Sun May 6 09:28:21 2012 -0300
+
+    [media] gspca: Fix querycap and incorrect return codes
+    
+    Add V4L2_CAP_DEVICE_CAPS support to querycap and replace -EINVAL by
+    -ENOTTY whenever an ioctl is not supported.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff --git a/drivers/media/video/gspca/gspca.c b/drivers/media/video/gspca/gspca.c
+index 9fe723c..7669f27 100644
+--- a/drivers/media/video/gspca/gspca.c
++++ b/drivers/media/video/gspca/gspca.c
+@@ -1793,7 +1794,7 @@ static int vidioc_s_jpegcomp(struct file *file, void *priv,
+        int ret;
+ 
+        if (!gspca_dev->sd_desc->set_jcomp)
+-               return -EINVAL;
++               return -ENOTTY;
+        if (mutex_lock_interruptible(&gspca_dev->usb_lock))
+                return -ERESTARTSYS;
+        gspca_dev->usb_err = 0;
+```
+
 ## 2 - `iwl_dump_nic_event_log`
 
 ```
@@ -348,6 +379,11 @@ index 08063ae..7a818277 100644
 
 ## 9 - `affs_fill_super`
 
+### Note:
+
+This doesn't actually 'fit the mold' for our dataset (and so 
+no traces are generated for this example).
+
 **From JUXTA**
 
 ```
@@ -430,7 +466,6 @@ index 1455668..36d1a6a 100644
         if (res) {
 ```
 
-
 ## 11 - `hfs_mkdir`
 
 **From JUXTA**
@@ -470,6 +505,12 @@ index 1455668..36d1a6a 100644
 
 ## 12 - `hfsplus_symlink`
 
+**From JUXTA**
+
+```
+HFSplus dir.c symlink and mknod creation [E] incorrect return value application 2 5y ✓
+```
+
 ```
 commit 27a4e3884e9c6497f96cc28256c3cdaa93d4cf97
 Author: Chengyu Song <csong84@gatech.edu>
@@ -502,6 +543,12 @@ index f0235c1..3074609 100644
 
 ## 13 - `hfsplus_mknod`
 
+**From JUXTA**
+
+```
+HFSplus dir.c symlink and mknod creation [E] incorrect return value application 2 5y ✓
+```
+
 ```
 commit 27a4e3884e9c6497f96cc28256c3cdaa93d4cf97
 Author: Chengyu Song <csong84@gatech.edu>
@@ -530,4 +577,233 @@ index f0235c1..3074609 100644
  
         mutex_lock(&sbi->vh_mutex);
         inode = hfsplus_new_inode(dir->i_sb, mode);
+```
+
+## 14 - `udf_update_inode`
+
+**From JUXTA**
+
+```
+UDF inode.c page I/O [E] incorrect return value application 1 8y ✓
+```
+
+```
+commit 0fd2ba36b8e4c720e5fb5ee40171919c8207237e
+Author: Changwoo Min <changwoo.m@gmail.com>
+Date:   Sun Mar 22 19:17:49 2015 -0400
+
+    udf: return correct errno for udf_update_inode()
+    
+    Instead of -ENOMEM, properly return -EIO udf_update_inode()
+    error, similar/consistent to the rest of filesystems.
+    
+    Signed-off-by: Changwoo Min <changwoo.m@gmail.com>
+    Signed-off-by: Jan Kara <jack@suse.cz>
+
+diff --git a/fs/udf/inode.c b/fs/udf/inode.c
+index 0001ece..52577a8e 100644
+--- a/fs/udf/inode.c
++++ b/fs/udf/inode.c
+@@ -1636,7 +1636,7 @@ static int udf_update_inode(struct inode *inode, int do_sync)
+                        udf_get_lb_pblock(inode->i_sb, &iinfo->i_location, 0));
+        if (!bh) {
+                udf_debug("getblk failure\n");
+-               return -ENOMEM;
++               return -EIO;
+        }
+ 
+        lock_buffer(bh);
+```
+
+## 15 - `__qbuf_userptr`
+
+```
+commit 4c2625db6f172114bcc4fd9e62f3c030c5fb4e4c
+Author: Marek Szyprowski <m.szyprowski@samsung.com>
+Date:   Mon Oct 3 03:21:45 2011 -0300
+
+    [media] media: vb2: fix incorrect return value
+    
+    This patch fixes incorrect return value. Errors should be returned
+    as negative numbers.
+    
+    Reported-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
+    Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff --git a/drivers/media/video/videobuf2-core.c b/drivers/media/video/videobuf2-core.c
+index 6687ac3..3f5c7a3 100644
+--- a/drivers/media/video/videobuf2-core.c
++++ b/drivers/media/video/videobuf2-core.c
+@@ -751,7 +751,7 @@ static int __qbuf_userptr(struct vb2_buffer *vb, struct v4l2_buffer *b)
+ 
+                /* Check if the provided plane buffer is large enough */
+                if (planes[plane].length < q->plane_sizes[plane]) {
+-                       ret = EINVAL;
++                       ret = -EINVAL;
+                        goto err;
+                }
+ 
+```
+
+## 16 - `vidioc_g_register`
+
+```
+commit cc7b6f257d42eb9829b38e3a8807943426a89a87
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Sun May 6 09:28:21 2012 -0300
+
+    [media] gspca: Fix querycap and incorrect return codes
+    
+    Add V4L2_CAP_DEVICE_CAPS support to querycap and replace -EINVAL by
+    -ENOTTY whenever an ioctl is not supported.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff --git a/drivers/media/video/gspca/gspca.c b/drivers/media/video/gspca/gspca.c
+index 9fe723c..7669f27 100644
+--- a/drivers/media/video/gspca/gspca.c
++++ b/drivers/media/video/gspca/gspca.c
+@@ -1066,10 +1066,10 @@ static int vidioc_g_register(struct file *file, void *priv,
+        struct gspca_dev *gspca_dev = video_drvdata(file);
+ 
+        if (!gspca_dev->sd_desc->get_chip_ident)
+-               return -EINVAL;
++               return -ENOTTY;
+ 
+        if (!gspca_dev->sd_desc->get_register)
+-               return -EINVAL;
++               return -ENOTTY;
+ 
+        if (mutex_lock_interruptible(&gspca_dev->usb_lock))
+                return -ERESTARTSYS;
+```
+
+## 17 - `vidioc_s_register`
+
+```
+commit cc7b6f257d42eb9829b38e3a8807943426a89a87
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Sun May 6 09:28:21 2012 -0300
+
+    [media] gspca: Fix querycap and incorrect return codes
+    
+    Add V4L2_CAP_DEVICE_CAPS support to querycap and replace -EINVAL by
+    -ENOTTY whenever an ioctl is not supported.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff --git a/drivers/media/video/gspca/gspca.c b/drivers/media/video/gspca/gspca.c
+index 9fe723c..7669f27 100644
+--- a/drivers/media/video/gspca/gspca.c
++++ b/drivers/media/video/gspca/gspca.c
+@@ -1090,10 +1090,10 @@ static int vidioc_s_register(struct file *file, void *priv,
+        struct gspca_dev *gspca_dev = video_drvdata(file);
+ 
+        if (!gspca_dev->sd_desc->get_chip_ident)
+-               return -EINVAL;
++               return -ENOTTY;
+ 
+        if (!gspca_dev->sd_desc->set_register)
+-               return -EINVAL;
++               return -ENOTTY;
+ 
+        if (mutex_lock_interruptible(&gspca_dev->usb_lock))
+                return -ERESTARTSYS;
+```
+
+## 18 - `vidioc_g_chip_ident`
+
+```
+commit cc7b6f257d42eb9829b38e3a8807943426a89a87
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Sun May 6 09:28:21 2012 -0300
+
+    [media] gspca: Fix querycap and incorrect return codes
+    
+    Add V4L2_CAP_DEVICE_CAPS support to querycap and replace -EINVAL by
+    -ENOTTY whenever an ioctl is not supported.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff --git a/drivers/media/video/gspca/gspca.c b/drivers/media/video/gspca/gspca.c
+index 9fe723c..7669f27 100644
+--- a/drivers/media/video/gspca/gspca.c
++++ b/drivers/media/video/gspca/gspca.c
+@@ -1115,7 +1115,7 @@ static int vidioc_g_chip_ident(struct file *file, void *priv,
+        struct gspca_dev *gspca_dev = video_drvdata(file);
+ 
+        if (!gspca_dev->sd_desc->get_chip_ident)
+-               return -EINVAL;
++               return -ENOTTY;
+ 
+        if (mutex_lock_interruptible(&gspca_dev->usb_lock))
+                return -ERESTARTSYS;
+```
+
+## 19 - `vidioc_querymenu`
+
+```
+commit cc7b6f257d42eb9829b38e3a8807943426a89a87
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Sun May 6 09:28:21 2012 -0300
+
+    [media] gspca: Fix querycap and incorrect return codes
+    
+    Add V4L2_CAP_DEVICE_CAPS support to querycap and replace -EINVAL by
+    -ENOTTY whenever an ioctl is not supported.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff --git a/drivers/media/video/gspca/gspca.c b/drivers/media/video/gspca/gspca.c
+index 9fe723c..7669f27 100644
+--- a/drivers/media/video/gspca/gspca.c
++++ b/drivers/media/video/gspca/gspca.c
+@@ -1565,7 +1566,7 @@ static int vidioc_querymenu(struct file *file, void *priv,
+        struct gspca_dev *gspca_dev = video_drvdata(file);
+ 
+        if (!gspca_dev->sd_desc->querymenu)
+-               return -EINVAL;
++               return -ENOTTY;
+        return gspca_dev->sd_desc->querymenu(gspca_dev, qmenu);
+ }
+```
+
+## 20 - `vidioc_g_jpegcomp`
+
+```
+commit cc7b6f257d42eb9829b38e3a8807943426a89a87
+Author: Hans Verkuil <hans.verkuil@cisco.com>
+Date:   Sun May 6 09:28:21 2012 -0300
+
+    [media] gspca: Fix querycap and incorrect return codes
+    
+    Add V4L2_CAP_DEVICE_CAPS support to querycap and replace -EINVAL by
+    -ENOTTY whenever an ioctl is not supported.
+    
+    Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+    Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+    Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+
+diff --git a/drivers/media/video/gspca/gspca.c b/drivers/media/video/gspca/gspca.c
+index 9fe723c..7669f27 100644
+--- a/drivers/media/video/gspca/gspca.c
++++ b/drivers/media/video/gspca/gspca.c
+@@ -1774,7 +1775,7 @@ static int vidioc_g_jpegcomp(struct file *file, void *priv,
+        int ret;
+ 
+        if (!gspca_dev->sd_desc->get_jcomp)
+-               return -EINVAL;
++               return -ENOTTY;
+        if (mutex_lock_interruptible(&gspca_dev->usb_lock))
+                return -ERESTARTSYS;
+        gspca_dev->usb_err = 0;
 ```
